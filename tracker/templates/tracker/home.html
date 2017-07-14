@@ -1,0 +1,22 @@
+Hello <b>{{ username }}</b><br>
+You have logged in!
+<br>
+<table border="1">
+	<tr>
+		<th>Handle</th>
+		<th>Platform</th>
+	</tr>	
+	{% for handle in handles %}
+	<tr>
+		<td>
+			{{ handle.name }}
+		</td>
+		<td>
+			{{ handle.platform_id }}
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+
+<a href="{% url 'tracker:trackmodule:index' %}">TRACKMODULE</a> &nbsp;
+<a href="{% url 'tracker:logout' %}">LOGOUT</a>

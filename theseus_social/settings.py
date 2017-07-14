@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['104.236.126.88']
 # Application definition
 
 INSTALLED_APPS = [
+    'tracker.apps.TrackerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

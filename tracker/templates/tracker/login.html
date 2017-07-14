@@ -1,0 +1,19 @@
+{% load static %}
+<h2>TRACKER Login</h2>
+<form method="post" action="{% url 'tracker:authenticate' %}">
+	{% csrf_token %}
+	<img src="{% static 'tracker/user.png' %}" height="15">
+	<input type="text" id="username" placeholder="Username" name="username"><br>
+	<img src="{% static 'tracker/pwd.png' %}" height="15">
+	<input type="password" id="password" placeholder="Password" name="password">
+	<div>
+		<input type="reset" value="Reset"> &nbsp;
+        <input type="submit" name="submit" value="Login">
+	</div>
+</form>
+<div align="center">
+    <br>
+    {% if msg %}
+        {{ msg }}
+    {% endif %}
+</div>

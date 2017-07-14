@@ -1,0 +1,9 @@
+<h2>
+	TRACKMODULE works
+</h2>
+{% for user in users %}
+{{ user.username }}
+{% endfor %}
+
+<a href="{% url 'tracker:home' %}">HOME</a> &nbsp;
+<a href="{% url 'tracker:logout' %}">LOGOUT</a>
