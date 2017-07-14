@@ -25,7 +25,7 @@ from tracker.mysql_helper import safe_insert, safe_update
 todaydate = datetime.datetime.today()
 todaydate = datetime.date(todaydate.year,todaydate.month,todaydate.day)
 
-dbs = MySQLdb.connect(host='localhost',user='nishant',passwd='nishu92',db='theseus_social',charset='utf8')
+dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='theseus_social',charset='utf8')
 
 class YoutubeScraper:
 	def __init__(self, gobackdays = 7):
