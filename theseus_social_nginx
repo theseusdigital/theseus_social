@@ -1,0 +1,13 @@
+server {
+    listen 81;
+    server_name 104.236.126.88;
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/nishant/theseus_social;
+    }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/home/nishant/theseus_social/theseus_social.sock;
+    }
+}

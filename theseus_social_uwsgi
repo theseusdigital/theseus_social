@@ -1,0 +1,17 @@
+[uwsgi]
+project = theseus_social
+uid = nishant
+base = /home/%(uid)
+
+chdir = %(base)/%(project)
+home = %(base)/Env/%(project)
+module = %(project).wsgi:application
+
+master = true
+processes = 5
+
+socket = %(chdir)/%(project).sock
+chown-socket = %(uid):www-data
+chmod-socket = 660
+vacuum = true
+logto = /home/nishant/theseus_social/logs/uwsgi.log
