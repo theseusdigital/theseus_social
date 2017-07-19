@@ -36,6 +36,7 @@ class TwitterScraper:
 		self.handles = Handle.objects.filter(platform_id = 2, status = 1).order_by('max_tweet_id')
 		self.geo = Geo.objects.get(id = 1)
 		self.twitterapps = TwitterAccessToken.objects.filter(active = 1)
+		self.appindex = 0
 
 	def handle_twitter(self, gobackdays = 7):
 		self.since = todaydate - timedelta(days = gobackdays)
@@ -45,9 +46,11 @@ class TwitterScraper:
 
 	def connect_to_api(self):
 		if len(self.twitterapps)>0:
-			appindex = random.randint(0,len(self.twitterapps)-1)
-			self.twapp = self.twitterapps[appindex]
-			current_token = self.twitterapps[appindex]
+			if self.appindex == len(self.twitterapps)-1:
+				self.appindex = 0
+			# self.appindex = random.randint(0,len(self.twitterapps)-1)
+			self.twapp = self.twitterapps[self.appindex]
+			current_token = self.twitterapps[self.appindex]
 			_TwitterOAuthToken = current_token.access_token
 			_TwitterOAuthTokenSecret = current_token.access_token_secret
 			_TwitterConsumerKey = current_token.api_key
@@ -58,6 +61,7 @@ class TwitterScraper:
 			# limit_status = twitterapi.application.rate_limit_status(resources="statuses,users")
 			# pp.pprint(limit_status)
 			# pp.pprint(TWITTER_ACCESS_DETAILS)
+			self.appindex += 1
 			return twitterapi
 		else:
 			print "No Twitter Apps"
