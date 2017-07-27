@@ -275,7 +275,7 @@ if __name__ == '__main__':
 	starttime = datetime.datetime.now()
 	print sys.argv
 	if(len(sys.argv)>1):
-		gobackdays = sys.argv[1]
+		gobackdays = int(sys.argv[1])
 	else:
 		gobackdays = 7
 	ys = YoutubeScraper(gobackdays)
