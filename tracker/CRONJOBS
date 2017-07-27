@@ -11,16 +11,19 @@
 50 */1 * * * /home/nishant/theseus_social/shscripts/handledailynumbers.sh > /home/nishant/theseus_social/logs/LOG_HANDLEDAILYNUMBERS
 
 # Social Media Scripts
-55 */2 * * * /home/nishant/theseus_social/shscripts/socialmedia.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIA
+55 */1 * * * /home/nishant/theseus_social/shscripts/socialmedia.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIA
 
 # Scrape Status
 56 23 * * * /home/nishant/theseus_social/shscripts/scrapestatus.sh > /home/nishant/theseus_social/logs/LOG_SCRAPESTATUS
 
 # Cron to get 30 day old FB Posts for handles
-#40 */6 * * * /home/nishant/theseus_social/shscripts/facebookhandlepostsold.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
-
-# Cron to get 30 day old Tweets for handles
-#45 */6 * * * /home/nishant/theseus_social/shscripts/handletweetsold.sh > /home/nishant/theseus_social/logs/LOG_HANDLETWEETSOLD
+0 22 * * * /home/nishant/theseus_social/shscripts/facebookhandlepostsold.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
 
 # Cron to get 30 day old Youtube Videos for handles
-#50 */6 * * * /home/nishant/theseus_social/shscripts/youtubechannelvideosold.sh > /home/nishant/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
+#10 22 * * * /home/nishant/theseus_social/shscripts/youtubechannelvideosold.sh > /home/nishant/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
+
+# Cron to get 30 day old Tweets for handles
+#15 22 * * * /home/nishant/theseus_social/shscripts/handletweetsold.sh > /home/nishant/theseus_social/logs/LOG_HANDLETWEETSOLD
+
+# Social Media Scripts for Last 30 days
+58 23 * * * /home/nishant/theseus_social/shscripts/socialmediaold.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIAOLD

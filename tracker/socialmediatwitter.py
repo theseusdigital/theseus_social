@@ -61,7 +61,12 @@ def getfollowers(handle, addedtime):
 
 
 if __name__ == '__main__':
-	gobackdays = 7
+	starttime = datetime.datetime.now()
+	print sys.argv
+	if(len(sys.argv)>1):
+		gobackdays = int(sys.argv[1])
+	else:
+		gobackdays = 7
 	datelist = [(todaydate - datetime.timedelta(days = days)) for days in range(gobackdays)]
 	twhandles = Handle.objects.filter(platform_id = 2, status = 1)
 	for handle in twhandles:
@@ -112,6 +117,8 @@ if __name__ == '__main__':
 		savetwittersummary(handle, handle_stats)
 
 	db.close()
+	endtime = datetime.datetime.now() - starttime
+	print "Completed in {0} secs.".format(endtime.seconds)
 
 
 
