@@ -23,13 +23,13 @@ import time
 class ScrapeStatus():
     def __init__(self):
         self.todaydate = datetime.datetime.today().date()
-        self.start = "%s 00:00:00"%(self.todaydate)
+        self.since = "%s 00:00:00"%(self.todaydate)
         self.obtain_scrape_status()
 
     def obtain_scrape_status(self):
-        facebook_count = FacebookHandlePost.objects.filter(published__gte = self.start).count()
-        twitter_count = HandleTweet.objects.filter(created_at__gte = self.start).count()
-        youtube_count = YoutubeChannelVideo.objects.filter(published__gte = self.start).count()
+        facebook_count = FacebookHandlePost.objects.filter(published__gte = self.since).count()
+        twitter_count = HandleTweet.objects.filter(created_at__gte = self.since).count()
+        youtube_count = YoutubeChannelVideo.objects.filter(published__gte = self.since).count()
         facebook_dailynums = FacebookDailyNums.objects.filter(addedtime = self.todaydate).count()
         twitter_dailynums = TwitterDailyNums.objects.filter(addedtime = self.todaydate).count()
         youtube_dailynums = YoutubeDailyNums.objects.filter(addedtime = self.todaydate).count()
@@ -69,12 +69,19 @@ class ScrapeStatus():
         # The main body is just another attachment
         body = email.mime.Text.MIMEText(message,'html')
         msg.attach(body)
-        s = smtplib.SMTP('localhost')
-        s.sendmail(sender,[receiver], msg.as_string())
-        s.quit()
+        # server = smtplib.SMTP('localhost')
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        username = 'nishant.theseus@gmail.com'
+        password = 'theseus123'
+        server.ehlo()
+        server.starttls()
+        server.login(username,password)
+        server.sendmail(sender,[receiver], msg.as_string())
+        server.quit()
+
         print 'Scrape Status Sent Successfully'
 
         
 if __name__ == '__main__':
     scrapestatus = ScrapeStatus()
-    # scrapestatus.send_email()
+    scrapestatus.send_email()
