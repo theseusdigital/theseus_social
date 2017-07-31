@@ -113,6 +113,11 @@ class YoutubeScraper:
 		print message
 
 	def getVideoStats(self, ids):
+		video_metrics = {
+						'comments':'commentCount','likes':'likeCount',
+						'views':'viewCount','dislikes':'dislikeCount',
+						'favorites':'favoriteCount'
+						}
 		params = {'part': 'statistics', 'maxResults': 50}
 
 		if ids is not None:
@@ -129,13 +134,14 @@ class YoutubeScraper:
 
 		for videoItem in response['items']:
 			videostats = {
-				'youtubeid':videoItem['id'],
-				'comments':videoItem['statistics']['commentCount'],
-				'likes':videoItem['statistics']['likeCount'],
-				'views':videoItem['statistics']['viewCount'],
-				'dislikes':videoItem['statistics']['dislikeCount'],
-				'favorites':videoItem['statistics']['favoriteCount']
+				'youtubeid':videoItem['id']
 			}
+			for metrickey,metricvalue in video_metrics.iteritems():
+				try:
+					videostats[metrickey] = videoItem['statistics'][metricvalue]
+				except KeyError:
+					videostats[metrickey] = 0
+
 			cursor = dbs.cursor()
 			try:
 				uniquecolumns = ["youtubeid"]
