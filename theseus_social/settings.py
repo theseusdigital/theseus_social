@@ -25,7 +25,7 @@ SECRET_KEY = 'i$b8vb*et^w&&qspe48idf))7al)p(kb7d6)74elda#rcm*9^7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['104.236.126.88']
+ALLOWED_HOSTS = ['104.236.126.88','nishusocial.com']
 
 
 # Application definition
