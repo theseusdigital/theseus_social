@@ -101,6 +101,6 @@ def query_youtube(youtubeid=None, name=None):
 	for videoItem in response['items']:
 		pp.pprint(videoItem)
 
-query_facebook()
-# query_twitter()
+# query_facebook()
+query_twitter()
 # query_youtube()
