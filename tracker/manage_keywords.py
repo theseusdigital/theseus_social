@@ -141,9 +141,9 @@ def getInstagramHandles(keyword, handle_id = None):
 	response = urlopen(apiurl)
 	data = json.loads(response.read())
 	if data.get('data'):
-		data = data['data']
-		if len(data)>0:
-			igdata = data['data'][0]
+		igdata = data['data']
+		if len(igdata)>0:
+			igdata = igdata[0]
 			pp.pprint(igdata)
 			if igdata.get("username"):
 				handlename = igdata['username']

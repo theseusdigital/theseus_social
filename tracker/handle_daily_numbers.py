@@ -10,7 +10,8 @@ from time import sleep
 import datetime
 from datetime import timedelta
 from tracker.models import Handle, FacebookUser, FacebookDailyNums, \
-					TwitterUser, TwitterDailyNums, YoutubeChannel, YoutubeDailyNums
+							TwitterUser, TwitterDailyNums, YoutubeChannel, \
+							YoutubeDailyNums, InstagramUser, InstagramDailyNums
 from django.db import IntegrityError
 
 import random
@@ -26,6 +27,7 @@ class HandleDailyNumbers:
 		self.handle_facebook()
 		self.handle_twitter()
 		self.handle_youtube()
+		self.handle_instagram()
 		
 	def handle_facebook(self):
 		print "\nFACEBOOK"
@@ -100,6 +102,31 @@ class HandleDailyNumbers:
 			except IntegrityError:
 				YoutubeDailyNums.objects.filter(handle_id = handle.id, addedtime = todaydate).update(**todaynums)
 				print "YoutubeDailyNums for HANDLE %s %s Updated"%(handle.id, handle.name)
+			except Exception as e:
+				print e
+
+	def handle_instagram(self):
+		print "\nINSTAGRAM"
+		print "TODAY: %s"%(todaydate)
+		ighandles = Handle.objects.filter(platform_id = 4, status = 1)
+		for handle in ighandles:
+			try:
+				iguser = InstagramUser.objects.get(uniqueid = handle.uniqueid)
+				todaynums = {}
+				todaynums["posts"] = iguser.posts
+				todaynums["friends"] = iguser.friends
+				todaynums["followers"] = iguser.followers
+				todaynums["addedtime"] = todaydate
+				todaynums["handle_id"] = handle.id
+			except InstagramUser.DoesNotExist:
+				print "User Not Found for HANDLE %s"%(handle.name)
+				continue
+			try:
+				InstagramDailyNums(**todaynums).save()
+				print "InstagramDailyNums for HANDLE %s %s Saved"%(handle.id, handle.name)
+			except IntegrityError:
+				InstagramDailyNums.objects.filter(handle_id = handle.id, addedtime = todaydate).update(**todaynums)
+				print "InstagramDailyNums for HANDLE %s %s Updated"%(handle.id, handle.name)
 			except Exception as e:
 				print e
 

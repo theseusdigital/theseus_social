@@ -104,6 +104,52 @@ class User(models.Model):
 	def __str__(self):
 		return self.username
 
+class FacebookAccessToken(models.Model):
+	owner = models.CharField(max_length=60)
+	appname = models.CharField(max_length=60, unique=True)
+	appid = models.CharField(max_length=60, unique=True)
+	api_secret = models.CharField(max_length=60, unique=True)
+	usage_stats = models.CharField(max_length=500, null=True, blank=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.appname
+
+class TwitterAccessToken(models.Model):
+	owner = models.CharField(max_length=60)
+	appname = models.CharField(max_length=60)
+	api_key = models.CharField(max_length=60, unique=True)
+	api_secret = models.CharField(max_length=60, unique=True)
+	access_token = models.CharField(max_length=60, unique=True)
+	access_token_secret = models.CharField(max_length=60, unique=True)
+	usage_stats = models.CharField(max_length=500, null=True, blank=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.appname
+
+class GoogleAccessToken(models.Model):
+	owner = models.CharField(max_length=60)
+	projectname = models.CharField(max_length=60, unique=True)
+	api_key = models.CharField(max_length=60, unique=True)
+	usage_stats = models.CharField(max_length=500, null=True, blank=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.projectname
+
+class InstagramAccessToken(models.Model):
+	owner = models.CharField(max_length=60)
+	appname = models.CharField(max_length=60)
+	client_id = models.CharField(max_length=60, unique=True)
+	client_secret = models.CharField(max_length=60, unique=True)
+	access_token = models.CharField(max_length=60, unique=True)
+	usage_stats = models.CharField(max_length=500, null=True, blank=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.appname
+
 class FacebookUser(models.Model):
 	uniqueid = models.BigIntegerField(db_index=True, unique=True)
 	name = models.CharField(max_length=200)
@@ -156,6 +202,28 @@ class FacebookDailyNums(models.Model):
 	class Meta:
 		unique_together = (('handle', 'addedtime'),)
 
+class TwitterUser(models.Model):
+	user_id = models.BigIntegerField(db_index=True, unique=True)
+	name = models.CharField(max_length=200)
+	screen_name = models.CharField(max_length=200)
+	created_at = models.DateTimeField()
+	statuses_count = models.BigIntegerField()
+	description = models.CharField(max_length=1000)
+	followers_count = models.IntegerField()
+	favorites_count = models.IntegerField()
+	listed_count = models.IntegerField()
+	friends_count = models.IntegerField()
+	profile_image_url = models.CharField(max_length=1000)
+	utc_offset = models.IntegerField()
+	time_zone = models.CharField(max_length=200, db_index=True)
+	location = models.CharField(max_length=200, db_index=True)
+	verified = models.BooleanField()
+	lang = models.CharField(max_length=10)
+	lastupdated = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.name
+
 class HandleTweet(models.Model):
 	geo_id = models.IntegerField(db_index=True, default=1)
 	handle = models.ForeignKey(Handle, db_index=True)
@@ -178,6 +246,29 @@ class HandleTweet(models.Model):
 
 	class Meta:
 		unique_together = (('handle', 'tweet_id'),)
+
+class TwitterDailyNums(models.Model):
+	handle = models.ForeignKey(Handle,db_index=True)
+	tweets = models.IntegerField(default=0)
+	followers = models.BigIntegerField(default=0)
+	favorites = models.IntegerField(default=0)
+	following = models.BigIntegerField(default=0)
+	addedtime = models.DateField()
+
+	class Meta:
+		unique_together = (('handle', 'addedtime'),)
+
+class SocialMediaTwitter(models.Model):
+	handle = models.ForeignKey(Handle, db_index=True, default = 1)
+	reportdate = models.DateField(db_index=True)
+	followers = models.BigIntegerField(default=0)
+	newfollowers = models.IntegerField(default=0)
+	tweets = models.IntegerField(default=0)
+	retweets = models.IntegerField(default=0)
+	favorites = models.IntegerField(default=0)
+
+	class Meta:
+		unique_together = (('handle', 'reportdate'),)
 	
 class TwitterTweet(models.Model):
 	geo_id = models.IntegerField(db_index=True, default=1)
@@ -202,97 +293,6 @@ class TwitterTweet(models.Model):
 
 	class Meta:
 		unique_together = (('keyword', 'tweet_id'),)
-
-class TwitterUser(models.Model):
-	user_id = models.BigIntegerField(db_index=True, unique=True)
-	name = models.CharField(max_length=200)
-	screen_name = models.CharField(max_length=200)
-	created_at = models.DateTimeField()
-	statuses_count = models.BigIntegerField()
-	description = models.CharField(max_length=1000)
-	followers_count = models.IntegerField()
-	favorites_count = models.IntegerField()
-	listed_count = models.IntegerField()
-	friends_count = models.IntegerField()
-	profile_image_url = models.CharField(max_length=1000)
-	utc_offset = models.IntegerField()
-	time_zone = models.CharField(max_length=200, db_index=True)
-	location = models.CharField(max_length=200, db_index=True)
-	verified = models.BooleanField()
-	lang = models.CharField(max_length=10)
-	lastupdated = models.DateTimeField(default=timezone.now)
-
-	def __str__(self):
-		return self.name
-
-class TwitterDailyNums(models.Model):
-	handle = models.ForeignKey(Handle,db_index=True)
-	tweets = models.IntegerField(default=0)
-	followers = models.BigIntegerField(default=0)
-	favorites = models.IntegerField(default=0)
-	following = models.BigIntegerField(default=0)
-	addedtime = models.DateField()
-
-	class Meta:
-		unique_together = (('handle', 'addedtime'),)
-
-class SocialMediaTwitter(models.Model):
-	handle = models.ForeignKey(Handle, db_index=True, default = 1)
-	reportdate = models.DateField(db_index=True)
-	followers = models.BigIntegerField(default=0)
-	newfollowers = models.IntegerField(default=0)
-	tweets = models.IntegerField(default=0)
-	retweets = models.IntegerField(default=0)
-	favorites = models.IntegerField(default=0)
-
-	class Meta:
-		unique_together = (('handle', 'reportdate'),)
-
-class TwitterAccessToken(models.Model):
-	owner = models.CharField(max_length=60)
-	appname = models.CharField(max_length=60)
-	api_key = models.CharField(max_length=60, unique=True)
-	api_secret = models.CharField(max_length=60, unique=True)
-	access_token = models.CharField(max_length=60, unique=True)
-	access_token_secret = models.CharField(max_length=60, unique=True)
-	usage_stats = models.CharField(max_length=500, null=True, blank=True)
-	active = models.BooleanField(default=True)
-
-	def __str__(self):
-		return self.appname
-
-class FacebookAccessToken(models.Model):
-	owner = models.CharField(max_length=60)
-	appname = models.CharField(max_length=60, unique=True)
-	appid = models.CharField(max_length=60, unique=True)
-	api_secret = models.CharField(max_length=60, unique=True)
-	usage_stats = models.CharField(max_length=500, null=True, blank=True)
-	active = models.BooleanField(default=True)
-
-	def __str__(self):
-		return self.appname
-
-class GoogleAccessToken(models.Model):
-	owner = models.CharField(max_length=60)
-	projectname = models.CharField(max_length=60, unique=True)
-	api_key = models.CharField(max_length=60, unique=True)
-	usage_stats = models.CharField(max_length=500, null=True, blank=True)
-	active = models.BooleanField(default=True)
-
-	def __str__(self):
-		return self.projectname
-
-class InstagramAccessToken(models.Model):
-	owner = models.CharField(max_length=60)
-	appname = models.CharField(max_length=60)
-	client_id = models.CharField(max_length=60, unique=True)
-	client_secret = models.CharField(max_length=60, unique=True)
-	access_token = models.CharField(max_length=60, unique=True)
-	usage_stats = models.CharField(max_length=500, null=True, blank=True)
-	active = models.BooleanField(default=True)
-
-	def __str__(self):
-		return self.appname
 
 class YoutubeChannel(models.Model):
 	handle = models.ForeignKey(Handle)
@@ -347,3 +347,46 @@ class SocialMediaYoutube(models.Model):
 
 	class Meta:
 		unique_together = (('handle', 'reportdate'),)
+
+class InstagramUser(models.Model):
+	uniqueid = models.BigIntegerField(db_index=True,unique=True)
+	name = models.CharField(max_length=200)
+	description = models.CharField(max_length=1000,default="")
+	posts = models.BigIntegerField(default=0)
+	friends = models.BigIntegerField(default=0)
+	followers = models.BigIntegerField(default=0)
+	picture = models.CharField(max_length=1024,default="")
+
+class InstagramHandlePost(models.Model):
+	handle = models.ForeignKey(Handle,db_index=True)
+	postid = models.BigIntegerField(default=0,unique=True)  
+	posttype = models.CharField(max_length=50)
+	caption = models.CharField(max_length=255)
+	url = models.CharField(max_length=1024)
+	postimg = models.CharField(max_length=1024,default=0)
+	author = models.BigIntegerField()
+	likes = models.IntegerField(default=0)
+	comments = models.IntegerField(default=0)
+	tags = models.CharField(max_length=500)
+	published = models.DateTimeField(db_index=True)
+	published_date = models.DateField(db_index=True)
+	lastupdated = models.DateTimeField(db_index=True)
+
+class InstagramDailyNums(models.Model):
+	handle = models.ForeignKey(Handle,db_index=True)
+	posts = models.IntegerField(default=0)
+	friends = models.BigIntegerField(default=0)
+	followers = models.BigIntegerField(default=0)
+	addedtime = models.DateField()
+
+	class Meta:
+		unique_together = (('handle', 'addedtime'),)
+
+class SocialMediaInstagram(models.Model):
+	handle = models.ForeignKey(Handle, db_index=True, default = 1)
+	reportdate = models.DateField(db_index=True)
+	followers = models.BigIntegerField(default=0)
+	newfollowers = models.IntegerField(default=0)
+	posts = models.IntegerField(default=0)
+	likes = models.IntegerField(default=0)
+	comments = models.IntegerField(default=0)
