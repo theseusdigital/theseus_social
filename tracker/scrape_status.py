@@ -15,7 +15,8 @@ from email.utils import formataddr
 
 import datetime
 from datetime import timedelta
-from tracker.models import FacebookHandlePost, HandleTweet, YoutubeChannelVideo, FacebookDailyNums, TwitterDailyNums, YoutubeDailyNums
+from tracker.models import FacebookHandlePost, HandleTweet, YoutubeChannelVideo, InstagramHandlePost,\
+                            FacebookDailyNums, TwitterDailyNums, YoutubeDailyNums, InstagramDailyNums
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 import time
@@ -30,16 +31,20 @@ class ScrapeStatus():
         facebook_count = FacebookHandlePost.objects.filter(published__gte = self.since).count()
         twitter_count = HandleTweet.objects.filter(created_at__gte = self.since).count()
         youtube_count = YoutubeChannelVideo.objects.filter(published__gte = self.since).count()
+        instagram_count = InstagramHandlePost.objects.filter(published__gte = self.since).count()
         facebook_dailynums = FacebookDailyNums.objects.filter(addedtime = self.todaydate).count()
         twitter_dailynums = TwitterDailyNums.objects.filter(addedtime = self.todaydate).count()
         youtube_dailynums = YoutubeDailyNums.objects.filter(addedtime = self.todaydate).count()
+        instagram_dailynums = InstagramDailyNums.objects.filter(addedtime = self.todaydate).count()
         self.statuses = [
                 {"table":"tracker_facebookhandlepost","records":facebook_count},
                 {"table":"tracker_handletweet","records":twitter_count},
                 {"table":"tracker_youtubechannelvideo","records":youtube_count},
+                {"table":"tracker_instagramhandlepost","records":instagram_count},
                 {"table":"tracker_facebookdailynums","records":facebook_dailynums},
                 {"table":"tracker_twitterdailynums","records":twitter_dailynums},
-                {"table":"tracker_youtubedailynums","records":youtube_dailynums}
+                {"table":"tracker_youtubedailynums","records":youtube_dailynums},
+                {"table":"tracker_instagramdailynums","records":instagram_dailynums}
         ]
         self.scrape_html = self.prepare_for_email()
 
