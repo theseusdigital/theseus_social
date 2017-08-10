@@ -8,4 +8,7 @@ $PY_EXEC tracker/socialmediatwitter.py 30
 echo "socialmediayoutube 30 days"
 $PY_EXEC tracker/socialmediayoutube.py 30
 
+echo "socialmediainstagram 30 days"
+$PY_EXEC tracker/socialmediainstagram.py 30
+
 deactivate

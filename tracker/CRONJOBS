@@ -7,6 +7,9 @@
 # Cron to get 7 day old Tweets for handles
 35 2-23/3 * * * /home/nishant/theseus_social/shscripts/handletweets.sh > /home/nishant/theseus_social/logs/LOG_HANDLETWEETS
 
+# Cron to get 7 day old Instagram Posts for handles
+45 */1 * * * /home/nishant/theseus_social/shscripts/instagramhandleposts.sh > /home/nishant/theseus_social/logs/LOG_INSTAGRAMHANDLEPOSTS
+
 # Dailynums crons
 50 */1 * * * /home/nishant/theseus_social/shscripts/handledailynumbers.sh > /home/nishant/theseus_social/logs/LOG_HANDLEDAILYNUMBERS
 
