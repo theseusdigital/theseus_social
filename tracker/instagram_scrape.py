@@ -176,7 +176,7 @@ class InstagramScraper:
 			posts['published_date'] = dt_published.strftime('%Y-%m-%d')
 			posts['lastupdated'] = datetime.datetime.now()
 			posts['posttype'] = p.get('type')
-			pp.pprint(posts)
+			# pp.pprint(posts)
 			cursor = dbs.cursor()
 			try:
 				post_query,post_data = safe_insert("tracker_instagramhandlepost",posts)
