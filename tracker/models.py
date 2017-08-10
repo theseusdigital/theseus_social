@@ -282,6 +282,18 @@ class GoogleAccessToken(models.Model):
 	def __str__(self):
 		return self.projectname
 
+class InstagramAccessToken(models.Model):
+	owner = models.CharField(max_length=60)
+	appname = models.CharField(max_length=60)
+	client_id = models.CharField(max_length=60, unique=True)
+	client_secret = models.CharField(max_length=60, unique=True)
+	access_token = models.CharField(max_length=60, unique=True)
+	usage_stats = models.CharField(max_length=500, null=True, blank=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.appname
+
 class YoutubeChannel(models.Model):
 	handle = models.ForeignKey(Handle)
 	etag = models.CharField(max_length=200)

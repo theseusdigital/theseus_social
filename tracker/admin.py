@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from tracker.models import User, Keyword, Platform, Handle, Geo, FacebookAccessToken, TwitterAccessToken, GoogleAccessToken, Brand
+from tracker.models import User, Keyword, Platform, Handle, Geo, FacebookAccessToken, TwitterAccessToken, GoogleAccessToken, InstagramAccessToken, Brand
 # Register your models here.
 
 class UserAdmin(admin.ModelAdmin):
@@ -57,5 +57,6 @@ admin.site.register(Geo, GeoAdmin)
 admin.site.register(FacebookAccessToken, AccessTokenAdmin)
 admin.site.register(TwitterAccessToken, AccessTokenAdmin)
 admin.site.register(GoogleAccessToken, GoogleTokenAdmin)
+admin.site.register(InstagramAccessToken, AccessTokenAdmin)
 admin.site.register(Brand, BrandAdmin)
 

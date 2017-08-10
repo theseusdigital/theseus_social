@@ -13,15 +13,16 @@ import json
 from twitter import Twitter, OAuth, TwitterHTTPError, OAuth2, oauth2_dance
 from apiclient.discovery import build
 
-from tracker.models import Platform, Keyword, Handle, FacebookAccessToken, TwitterAccessToken
+from tracker.models import Platform, Keyword, Handle, FacebookAccessToken, TwitterAccessToken, GoogleAccessToken, InstagramAccessToken
 
 fbapps = FacebookAccessToken.objects.filter(active=1)
 fbtokens = [fbapp.appid+'|'+fbapp.api_secret for fbapp in fbapps]
 
 twapps = TwitterAccessToken.objects.filter(active=1)
 
-api_key = 'AIzaSyB6SVh2oBf-qF-NV36hbbItzmneIVBOujg'
-youtube = build('youtube', 'v3', developerKey=api_key)
+googleapps = GoogleAccessToken.objects.filter(active = 1)
+
+igapps = InstagramAccessToken.objects.filter(active = 1)
 
 def getFacebookHandles(keyword, handle_id = None):
 	handle_query = keyword.name.split(":")[-1]
@@ -90,6 +91,9 @@ def getTwitterHandles(keyword, handle_id = None):
 	return True
 
 def getYoutubeHandles(keyword, handle_id = None):
+	current_token = googleapps[random.randint(0,len(googleapps)-1)]
+	api_key = current_token.api_key
+	youtube = build('youtube', 'v3', developerKey=api_key)
 	keywordset = keyword.name.split(":")
 	handle_prefix = keywordset[0]
 	handle_query = keywordset[-1]
@@ -127,11 +131,47 @@ def getYoutubeHandles(keyword, handle_id = None):
 		pp.pprint(response)
 		return False
 
+def getInstagramHandles(keyword, handle_id = None):
+	handle_query = keyword.name.split(":")[-1]
+	current_token = igapps[random.randint(0,len(igapps)-1)]
+	# graph = facebook.GraphAPI(access_token=current_token, version='2.7')
+	apiurl =  "https://api.instagram.com/v1/users/search?q=%s&access_token=%s&count=1"
+	apiurl = apiurl % (handle_query,current_token.access_token)
+	print "IGURL=> "+apiurl
+	response = urlopen(apiurl)
+	data = json.loads(response.read())
+	if data.get('data'):
+		data = data['data']
+		if len(data)>0:
+			igdata = data['data'][0]
+			pp.pprint(igdata)
+			if igdata.get("username"):
+				handlename = igdata['username']
+			else: 
+				handlename = keyword.name
+			handledetails = {}
+			handledetails['name'] = handlename
+			handledetails['uniqueid'] = igdata['id']
+			handledetails['platform_id'] = 4
+			handledetails['keyword_id'] = keyword.id
+			if handle_id:
+				handledetails['id'] = handle_id
+
+			handle = Handle(**handledetails)
+			handle.save()
+			pp.pprint(handledetails)
+			print 'Instagram Handle Saved'
+			return True
+	print 'No Instagram Handles Found for keyword '+keyword.name
+	pp.pprint(data)
+	return False
+
 if __name__ == '__main__':
 	callables = {
 		1:getFacebookHandles,
 		2:getTwitterHandles,
-		3:getYoutubeHandles
+		3:getYoutubeHandles,
+		4:getInstagramHandles
 		}
 	platforms = Platform.objects.filter(active = True).order_by("id")
 	for keyword in Keyword.objects.filter(active = True):
