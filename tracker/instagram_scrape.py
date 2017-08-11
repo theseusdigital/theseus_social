@@ -75,7 +75,7 @@ class InstagramScraper:
 
 	def raise_apierror(self, err):
 		pp.pprint(err)
-		errormsg = err.get("message","HTTP ERROR")
+		errormsg = err.get("error_message","HTTP ERROR")
 		message = "%s: %s"%(datetime.datetime.now(), errormsg)
 		self.igapp.usage_stats = message
 		self.igapp.save()
