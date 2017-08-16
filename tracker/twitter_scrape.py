@@ -36,7 +36,7 @@ class TwitterScraper:
 		self.keywords = Keyword.objects.filter(active = 1, platform__in = [2])
 		self.handles = Handle.objects.filter(platform_id = 2, status = 1).order_by('max_tweet_id')
 		self.geo = Geo.objects.get(id = 1)
-		self.twitterapps = TwitterAccessToken.objects.filter(active = 1)
+		self.twitterapps = TwitterAccessToken.objects.filter(active = 1).order_by('id')[:6]
 		self.appindex = 0
 
 	def handle_twitter(self, gobackdays = 7):
