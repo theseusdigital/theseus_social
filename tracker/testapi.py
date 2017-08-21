@@ -21,7 +21,7 @@ from apiclient.http import HttpMock
 from tracker.models import TwitterAccessToken, FacebookAccessToken, GoogleAccessToken
 
 def query_twitter():
-	current_token = TwitterAccessToken.objects.get(id = 1, active = 1)
+	current_token = TwitterAccessToken.objects.get(id = 7, active = 1)
 
 	_TwitterOAuthToken = current_token.access_token
 	_TwitterOAuthTokenSecret = current_token.access_token_secret
@@ -31,9 +31,10 @@ def query_twitter():
 	TWITTER_ACCESS_DETAILS = (_TwitterConsumerKey, _TwitterConsumerSecret)
 	twitterapi = Twitter(auth=OAuth2(bearer_token=oauth2_dance(*TWITTER_ACCESS_DETAILS)))
 
-	tweets = twitterapi.statuses.user_timeline(id = 348375714,count = 5,include_rts = True)
+	# tweets = twitterapi.statuses.user_timeline(id = 348375714,count = 5,include_rts = True)
+	tweets = twitterapi.search.tweets(q="#omgindia",geocode="20.593684,78.96288,500mi",count=100)
 
-	for tweet in tweets:
+	for tweet in tweets["statuses"]:
 		pp.pprint(tweet)
 
 def query_facebook():

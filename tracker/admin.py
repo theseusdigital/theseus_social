@@ -2,13 +2,13 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from tracker.models import User, Keyword, Platform, Handle, Geo, FacebookAccessToken, TwitterAccessToken, GoogleAccessToken, InstagramAccessToken, Brand
+from tracker.models import User, Keyword, Platform, Handle, Hashtag, Geo, FacebookAccessToken, TwitterAccessToken, GoogleAccessToken, InstagramAccessToken, Brand
 # Register your models here.
 
 class UserAdmin(admin.ModelAdmin):
-    fields=['username','password','handle','keyword','active']
-    list_display=('username','password','linked_handles','linked_keywords','active')
-    search_fields=['username']
+    fields = ['username','password','handle','keyword','active']
+    list_display = ('username','password','linked_handles','linked_keywords','active')
+    search_fields = ['username']
 
 class HandleAdmin(admin.ModelAdmin):
 	search_fields = ['name']
@@ -33,9 +33,14 @@ class GoogleTokenAdmin(admin.ModelAdmin):
     list_display = ('projectname', 'usage_stats', 'active')
 
 class BrandAdmin(admin.ModelAdmin):
-    fields=['name','handle','active']
-    list_display=('name','linked_handles','active')
-    search_fields=['name']
+    fields = ['name','handle','active']
+    list_display = ('name','linked_handles','active')
+    search_fields = ['name']
+
+class HashtagAdmin(admin.ModelAdmin):
+    fields = ['name','max_tweet_id','active']
+    list_display = ('name','max_tweet_id','active')
+    search_fields = ['name']
 
 # class UserHandleAdmin(admin.ModelAdmin):
 # 	fields=['user','handle']
@@ -59,4 +64,5 @@ admin.site.register(TwitterAccessToken, AccessTokenAdmin)
 admin.site.register(GoogleAccessToken, GoogleTokenAdmin)
 admin.site.register(InstagramAccessToken, AccessTokenAdmin)
 admin.site.register(Brand, BrandAdmin)
+admin.site.register(Hashtag, HashtagAdmin)
 

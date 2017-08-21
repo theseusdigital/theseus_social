@@ -247,6 +247,60 @@ class HandleTweet(models.Model):
 	class Meta:
 		unique_together = (('handle', 'tweet_id'),)
 
+class HashtagUser(models.Model):
+	user_id = models.BigIntegerField(db_index=True, unique=True)
+	name = models.CharField(max_length=200)
+	screen_name = models.CharField(max_length=200)
+	created_at = models.DateTimeField()
+	statuses_count = models.BigIntegerField()
+	description = models.CharField(max_length=1000)
+	followers_count = models.IntegerField()
+	favorites_count = models.IntegerField()
+	listed_count = models.IntegerField()
+	friends_count = models.IntegerField()
+	profile_image_url = models.CharField(max_length=1000)
+	utc_offset = models.IntegerField()
+	time_zone = models.CharField(max_length=200, db_index=True)
+	location = models.CharField(max_length=200, db_index=True)
+	verified = models.BooleanField()
+	lang = models.CharField(max_length=10)
+	lastupdated = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.name
+
+class Hashtag(models.Model):
+	name = models.CharField(max_length=255, unique=True)
+	max_tweet_id = models.BigIntegerField(default=0,db_index=True)
+	active = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.name
+
+class HashtagTweet(models.Model):
+	geo_id = models.IntegerField(db_index=True, default=1)
+	hashtag = models.ForeignKey(Hashtag, db_index=True)
+	user_id = models.BigIntegerField()
+	text = models.CharField(max_length=1024)
+	tweet_id = models.BigIntegerField(db_index=True)
+	in_reply_to_user_id = models.BigIntegerField()
+	in_reply_to_status_id = models.BigIntegerField()
+	favorite_count = models.BigIntegerField()
+	favorited = models.BooleanField()
+	retweet_count = models.PositiveIntegerField(default=0, db_index=True)
+	retweeted = models.BooleanField()
+	created_at = models.DateTimeField('tweet time', db_index=True)
+	insert_time = models.DateTimeField('inserted time')
+	lang = models.CharField(max_length=10)
+	entities_hashtags = models.CharField(max_length=500)
+	entities_urls = models.CharField(max_length=500)
+	entities_user_mentions = models.CharField(max_length=500)
+	entities_media = models.CharField(max_length=500)
+	active = models.BooleanField(db_index=True, default=False)
+
+	class Meta:
+		unique_together = (('hashtag', 'tweet_id'),)
+
 class TwitterDailyNums(models.Model):
 	handle = models.ForeignKey(Handle,db_index=True)
 	tweets = models.IntegerField(default=0)
