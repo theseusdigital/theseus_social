@@ -32,4 +32,4 @@
 58 23 * * * /home/nishant/theseus_social/shscripts/socialmediaold.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIAOLD
 
 # Hashtag Tracking Scripts
-*/15 * * * * /home/nishant/theseus_social/shscripts/hashtagscrape.sh > /home/nishant/theseus_social/logs/LOG_HASHTAGSCRAPE
+0,15,30,45 * * * * /home/nishant/theseus_social/shscripts/hashtagscrape.sh > /home/nishant/theseus_social/logs/LOG_HASHTAGSCRAPE
