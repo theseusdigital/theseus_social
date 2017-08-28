@@ -32,17 +32,29 @@ class FacebookScraper:
 		self._india_offset = timedelta(hours = 5,minutes = 30)
 		sincedate = todaydate - datetime.timedelta(days = gobackdays)
 		self.since = sincedate.strftime('%Y-%m-%d')
+		self.fbapps = FacebookAccessToken.objects.filter(active = 1)
+		self.appindex = 0
 		# self.handle_facebook()
 
 	def handle_facebook(self):
 		self.handle_posts()
 		dbs.close()
 
+	def get_accesstoken(self):
+		if len(self.fbapps)>0:
+			if self.appindex == len(self.fbapps)-1:
+				self.appindex = 0
+			self.fbapp = self.fbapps[self.appindex]
+			current_token = self.fbapp.appid+"|"+self.fbapp.api_secret
+			self.appindex += 1
+			return current_token
+		else:
+			print "No Facebook Apps"
+			return False
+
 	def handle_posts(self):
 		graphuserurl = "https://graph.facebook.com/%s/?fields=%s&access_token=%s"
 		graphpostsurl = "https://graph.facebook.com/%s/feed/?since=%s&fields=%s&access_token=%s"
-		fbapps = FacebookAccessToken.objects.filter(active = 1)
-		self._accessTokenlist = [fbapp.appid+'|'+fbapp.api_secret for fbapp in fbapps]
 		fbhandles = Handle.objects.filter(platform_id = 1, status = 1)
 		userfields = ['id','name','description','fan_count','talking_about_count','picture','is_verified']
 		postfields = ['id','object_id','picture','from','message','created_time',
@@ -51,38 +63,43 @@ class FacebookScraper:
 		userfields_str = ','.join(userfields)
 		postfields_str = ','.join(postfields)
 		handle_no = 1
+		self.requests = 0
 		for handle in fbhandles:
 			self.page = 0
-			appindex = random.randint(0,len(self._accessTokenlist)-1)
-			self.fbapp = fbapps[appindex]
-			current_token = self._accessTokenlist[appindex]
-			# self.graph = facebook.GraphAPI(access_token=current_token, version='2.7')
-			userurl = graphuserurl % (handle.uniqueid, userfields_str, current_token)
-			response = urlopen(userurl)
-			userdata = json.loads(response.read())
-			if userdata.get("error"):
-				print 'API URL==>\n%s'%(userurl)
-				self.raise_apierror(userdata["error"])
-				continue
-			user = self.getUser(handle,userdata,userurl)
-			if not user:
-				continue
+			# appindex = random.randint(0,len(self._accessTokenlist)-1)
+			current_token = self.get_accesstoken()
+			if current_token:
+				# self.graph = facebook.GraphAPI(access_token=current_token, version='2.7')
+				userurl = graphuserurl % (handle.uniqueid, userfields_str, current_token)
+				response = urlopen(userurl)
+				self.requests += 1
+				userdata = json.loads(response.read())
+				if userdata.get("error"):
+					print 'API URL==>\n%s'%(userurl)
+					self.raise_apierror(userdata["error"])
+					continue
+				user = self.getUser(handle,userdata,userurl)
+				if not user:
+					continue
 
-			posturl = graphpostsurl % (handle.uniqueid, self.since, postfields_str, current_token)
-			response = urlopen(posturl)
-			postdata = json.loads(response.read())
-			if postdata.get("error"):
-				print 'API URL==>\n%s'%(posturl)
-				self.raise_apierror(postdata["error"])
-				continue
-			# pp.pprint(postdata)
-			# break
-			# postdata = self.graph.get_object(id=handle.uniqueid+'/feed',since=self.since,fields=','.join(postfields))
-			self.getPosts(handle,postdata,posturl)
-			print "HANDLE NO: %s"%(handle_no)
-			handle_no += 1
-			print "sleep\n"
-			sleep(3)
+				current_token = self.get_accesstoken()
+				posturl = graphpostsurl % (handle.uniqueid, self.since, postfields_str, current_token)
+				response = urlopen(posturl)
+				self.requests += 1
+				postdata = json.loads(response.read())
+				if postdata.get("error"):
+					print 'API URL==>\n%s'%(posturl)
+					self.raise_apierror(postdata["error"])
+					continue
+				# pp.pprint(postdata)
+				# break
+				# postdata = self.graph.get_object(id=handle.uniqueid+'/feed',since=self.since,fields=','.join(postfields))
+				self.getPosts(handle,postdata,posturl)
+				print "REQUESTS: %s"%(self.requests)
+				print "HANDLE NO: %s"%(handle_no)
+				handle_no += 1
+				print "sleep\n"
+				sleep(3)
 
 	def raise_apierror(self, err):
 		errormsg = err.get("message","HTTP ERROR")
@@ -143,7 +160,9 @@ class FacebookScraper:
 			self.savePosts(handle,firstpage)
 			next = requests.get(data['paging']['next']).json()
 			apiurl = data['paging']['next']
+			self.requests += 1
 			self.page += 1
+			print "REQUESTS: %s"%(self.requests)
 			print 'Next Page: %s'%(self.page)
 			self.getPosts(handle,next,apiurl)
 		except:
