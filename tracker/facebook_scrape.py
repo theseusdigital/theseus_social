@@ -106,7 +106,7 @@ class FacebookScraper:
 		message = "%s: %s"%(datetime.datetime.now(), errormsg)
 		self.fbapp.usage_stats = message
 		self.fbapp.save()
-		print message
+		print message+"\n"
 
 	def getUser(self, handle, data, apiurl='firsturl'):
 		print "HANDLE ==> %s %s"%(handle.id, handle.name)
