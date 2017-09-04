@@ -84,7 +84,7 @@ class YoutubeScraper:
 			sleep(3)
 
 	def getSharedFB(self, id):
-	    accessTokenlist = ['879619345514435|14b8765e98756ffe65102a0c6d181f1e']
+	    accessTokenlist = ['ACCESS_TOKEN']
 	    apiurl = "https://graph.facebook.com/?id=https://www.youtube.com/watch?v=##VIDEOID&access_token=##AT"
 	    apiurl = apiurl.replace('##VIDEOID',id)
 	    apiurl = apiurl.replace('##AT',accessTokenlist[random.randint(0,len(accessTokenlist)-1)])
