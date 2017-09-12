@@ -42,7 +42,7 @@ class FacebookScraper:
 
 	def get_accesstoken(self):
 		if len(self.fbapps)>0:
-			if self.appindex == len(self.fbapps)-1:
+			if self.appindex == len(self.fbapps):
 				self.appindex = 0
 			self.fbapp = self.fbapps[self.appindex]
 			current_token = self.fbapp.appid+"|"+self.fbapp.api_secret
