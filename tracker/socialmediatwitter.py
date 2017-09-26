@@ -23,7 +23,7 @@ def gettweetstats(handle, gobackdays = 7):
 	cursor = db.cursor()
 	query = "select sum(favorite_count) as favorites, sum(retweet_count) as retweets, count(1) as tweets,"+\
 		" date(created_at) as tweetdate from tracker_handletweet where handle_id = %s and"+\
-		" created_at >= '%s 00:00:00' and created_at <= '%s 23:59:59' group by tweetdate"
+		" created_at >= '%s 00:00:00' and created_at <= '%s 23:59:59' and text not like 'RT %' group by tweetdate"
 	query = query%(handle.id, since, until)
 	# print query
 	cursor.execute(query)
