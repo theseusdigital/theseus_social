@@ -29,6 +29,7 @@ dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='th
 
 class YoutubeScraper:
 	def __init__(self, gobackdays = 7):
+		self._india_offset = timedelta(hours = 5,minutes = 30)
 		self.googleapps = GoogleAccessToken.objects.filter(active = 1)
 		self.sincedate = todaydate - datetime.timedelta(days = gobackdays)
 		# self.handle_youtube()
@@ -185,7 +186,9 @@ class YoutubeScraper:
 		for itm in response['items']:
 			# pp.pprint(itm)
 			vid = {}
-			vid['published'] = self.convertYDateTime(itm['snippet']['publishedAt'])
+			dt_published = self.convertYDateTime(itm['snippet']['publishedAt'])
+			indiatz_published = dt_published + self._india_offset
+			vid['published'] = indiatz_published
 			if vid['published'].date() < since:
 				self.nextToken = None
 				print 'Videos before %s Ignored'%(since)
