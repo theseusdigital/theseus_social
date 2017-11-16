@@ -21,11 +21,14 @@ import gc
 from urllib import urlencode,urlopen
 import json
 from tracker.mysql_helper import safe_insert, safe_update
+import re
 
 todaydate = datetime.datetime.today()
 todaydate = datetime.date(todaydate.year,todaydate.month,todaydate.day)
 
 dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='theseus_social',charset='utf8')
+
+re_hash = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([_A-Za-z]+[A-Za-z0-9]+)')
 
 class FacebookScraper:
 	def __init__(self, gobackdays = 7):
@@ -196,6 +199,7 @@ class FacebookScraper:
 			posts['message'] = message = p.get('message','None')
 			if(message == 'None'):
 				posts['message'] = message = p.get('story','')
+			posts['hashtags'] = self.get_hashtags(posts['message'])
 			posts['message'] = posts['message'].encode('unicode_escape')[:255]
 			
 			if 'updated their cover photo' in posts['message']:
@@ -250,6 +254,10 @@ class FacebookScraper:
 			# gc.collect()
 		print "%s Posts Saved"%(len(savedposts))
 		print "%s Posts Updated"%(len(updatedposts))
+
+	def get_hashtags(self, post):
+		hashes = ",".join([hsh.strip('#').encode('unicode_escape') for hsh in re_hash.findall(post)])
+		return hashes
 
 if __name__ == '__main__':
 	starttime = datetime.datetime.now()

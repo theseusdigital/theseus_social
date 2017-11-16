@@ -92,15 +92,15 @@ class HashtagScraper:
 					self._parsed_tweets = []
 					if maxid == 0 and self.totalTweets == 0:
 						print 'Saving tweets for fresh hashtag ',self.hashtag.name
-						tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,count=100)
+						tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,count=100,tweet_mode = "extended")
 					else:
 						if self.totalTweets != 0:
 							page += 1
 							print 'Continuing to next page for hashtag ',str(self.hashtag.pk),' page ',page
-							tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,max_id=(maxid-1),count=100)
+							tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,max_id=(maxid-1),count=100,tweet_mode = "extended")
 						else:
 							print "Resuming saving tweets from ",maxid
-							tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,since_id=maxid,count=100)
+							tweets = twitterapi.search.tweets(q=self.hashtag.name,geocode=self.geo.location,since_id=maxid,count=100,tweet_mode = "extended")
 					self.requests += 1
 					self._parsed_tweets,self._parsed_users = self.parse_hashtag_tweets(tweets['statuses'])
 					if len(self._parsed_tweets) > 0:
@@ -152,7 +152,7 @@ class HashtagScraper:
 			parsed_tweet = {}
 			parsed_tweet['geo_id'] = self.geo.id
 			parsed_tweet['hashtag_id'] = self.hashtag.id
-			parsed_tweet['text'] = tweet['text'].encode('unicode_escape')
+			parsed_tweet['text'] = tweet['full_text'].encode('unicode_escape')
 			parsed_tweet['tweet_id'] = tweet['id_str']
 			parsed_tweet['created_at'] = tweet_time_tuple.strftime('%Y-%m-%d %H:%M:%S')
 			parsed_tweet['insert_time'] = insertime

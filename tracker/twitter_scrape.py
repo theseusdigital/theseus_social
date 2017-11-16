@@ -96,15 +96,15 @@ class TwitterScraper:
 					self._parsed_tweets = []
 					if maxid == 0 and self.totalTweets == 0:
 						print 'Saving tweets for fresh handle ',self.handle.name
-						tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True)
+						tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True,tweet_mode = "extended")
 					else:
 						if self.totalTweets != 0:
 							page += 1
 							print 'Continuing to next page for handle ',str(self.handle.pk),' page ',page
-							tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True,max_id = (maxid-1))
+							tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True,max_id = (maxid-1),tweet_mode = "extended")
 						else:
 							print "Resuming saving tweets from ",maxid
-							tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True,since_id = (maxid-1))
+							tweets = twitterapi.statuses.user_timeline(id = handle_id,count = 1000,include_rts = True,since_id = (maxid-1),tweet_mode = "extended")
 					self.requests += 1
 					self._parsed_tweets = self.parse_handle_tweets(tweets)
 					if len(self._parsed_tweets) > 0:
@@ -204,7 +204,7 @@ class TwitterScraper:
 			parsed_tweet = {}
 			parsed_tweet['geo_id'] = 1
 			parsed_tweet['handle_id'] = self.handle.id
-			parsed_tweet['text'] = tweet['text'].encode('unicode_escape')
+			parsed_tweet['text'] = tweet['full_text'].encode('unicode_escape')
 			parsed_tweet['tweet_id'] = tweet['id_str']
 			parsed_tweet['created_at'] = tweet_time_tuple.strftime('%Y-%m-%d %H:%M:%S')
 			parsed_tweet['insert_time'] = insertime
@@ -299,15 +299,15 @@ class TwitterScraper:
 					self._parsed_tweets = []
 					if maxid==0 and self.totalTweets==0:
 						print 'Saving tweets for fresh keyword ',self.keyword.name
-						tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,count=100)
+						tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,count=100,tweet_mode = "extended")
 					else:
 						if self.totalTweets!=0:
 							page += 1
 							print 'Continuing to next page for keyword ',str(self.keyword.pk),' page ',page
-							tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,max_id=(maxid-1),count=100)
+							tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,max_id=(maxid-1),count=100,tweet_mode = "extended")
 						else:
 							print "Resuming saving tweets from ",maxid
-							tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,since_id=maxid,count=100)
+							tweets = twtr.search.tweets(q=self.keyword.name,geocode=self.geo.location,since_id=maxid,count=100,tweet_mode = "extended")
 						
 					self._parsed_tweets,self._parsed_users = self.parse_keyword_tweets(tweets['statuses'])
 					if len(self._parsed_tweets)>0:
@@ -337,7 +337,7 @@ class TwitterScraper:
 				return parsed_tweets,parsed_users
 			parsed_tweet = {}
 			parsed_tweet['keyword_id'] = self.keyword.pk
-			parsed_tweet['text'] = tweet['text'].encode('unicode_escape')
+			parsed_tweet['text'] = tweet['full_text'].encode('unicode_escape')
 			parsed_tweet['tweet_id'] = tweet['id_str']
 			parsed_tweet['created_at'] = tweet_time_tuple.strftime('%Y-%m-%d %H:%M:%S')
 			parsed_tweet['insert_time'] = insertime
