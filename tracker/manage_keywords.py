@@ -24,6 +24,8 @@ googleapps = GoogleAccessToken.objects.filter(active = 1)
 
 igapps = InstagramAccessToken.objects.filter(active = 1)
 
+STATUS = 1
+
 def getFacebookHandles(keyword, handle_id = None):
 	handle_query = keyword.name.split(":")[-1]
 	current_token = fbtokens[random.randint(0,len(fbtokens)-1)]
@@ -48,6 +50,7 @@ def getFacebookHandles(keyword, handle_id = None):
 		handledetails['uniqueid'] = data['id']
 		handledetails['platform_id'] = 1
 		handledetails['keyword_id'] = keyword.id
+		handledetails['status'] = STATUS
 		if handle_id:
 			handledetails['id'] = handle_id
 
@@ -81,6 +84,7 @@ def getTwitterHandles(keyword, handle_id = None):
 	handledetails['name'] = userdetails['screen_name']
 	handledetails['platform_id'] = 2
 	handledetails['keyword_id'] = keyword.id
+	handledetails['status'] = STATUS
 	if handle_id:
 		handledetails['id'] = handle_id
 
@@ -118,6 +122,7 @@ def getYoutubeHandles(keyword, handle_id = None):
 		handledetails['name'] = handlename
 		handledetails['platform_id'] = 3
 		handledetails['keyword_id'] = keyword.id
+		handledetails['status'] = STATUS
 		if handle_id:
 			handledetails['id'] = handle_id
 
@@ -154,6 +159,7 @@ def getInstagramHandles(keyword, handle_id = None):
 			handledetails['uniqueid'] = igdata['id']
 			handledetails['platform_id'] = 4
 			handledetails['keyword_id'] = keyword.id
+			handledetails['status'] = STATUS
 			if handle_id:
 				handledetails['id'] = handle_id
 
@@ -176,7 +182,7 @@ if __name__ == '__main__':
 	platforms = Platform.objects.filter(active = True).order_by("id")
 	for keyword in Keyword.objects.filter(active = True):
 		for platform in platforms:
-			handles = Handle.objects.filter(platform_id = platform.id, keyword_id = keyword.id, status = 1)
+			handles = Handle.objects.filter(platform_id = platform.id, keyword_id = keyword.id, status__in = [1,2])
 			if len(handles) == 0:
 				if keyword.platform.filter(id = platform.id).exists():
 					print "Searching handle for KEYWORD %s on PLATFORM %s"%(keyword.name,platform.name)
