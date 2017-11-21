@@ -32,4 +32,9 @@
 58 23 * * * /home/nishant/theseus_social/shscripts/socialmediaold.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIAOLD
 
 # Hashtag Tracking Scripts
-0,15,30,45 * * * * /home/nishant/theseus_social/shscripts/hashtagscrape.sh > /home/nishant/theseus_social/logs/LOG_HASHTAGSCRAPE
+#0,15,30,45 * * * * /home/nishant/theseus_social/shscripts/hashtagscrape.sh > /home/nishant/theseus_social/logs/LOG_HASHTAGSCRAPE
+
+# Cron to get 2 day old Posts for Hashtracking Handles
+15 4-22/3 * * * /home/nishant/theseus_social/shscripts/facebookhashtags.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHASHTAGS
+
+16 4-22/3 * * * /home/nishant/theseus_social/shscripts/twitterhashtags.sh > /home/nishant/theseus_social/logs/LOG_TWITTERHASHTAGS
