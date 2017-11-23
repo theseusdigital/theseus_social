@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from django.core import urlresolvers
+import datetime
 
 # Create your models here.
 
@@ -448,3 +449,29 @@ class SocialMediaInstagram(models.Model):
 
 	class Meta:
 		unique_together = (('handle', 'reportdate'),)
+
+class TwitterFollowers(models.Model):
+	handle = models.ForeignKey(Handle, db_index=True)
+	user_id = models.BigIntegerField(db_index=True)
+	name = models.CharField(max_length=200)
+	screen_name = models.CharField(max_length=200)
+	created_at = models.DateTimeField()
+	tweets = models.BigIntegerField()
+	description = models.CharField(max_length=1000)
+	followers = models.IntegerField()
+	favorites = models.IntegerField()
+	listed = models.IntegerField()
+	friends = models.IntegerField()
+	profile_image_url = models.CharField(max_length=1000)
+	utc_offset = models.IntegerField()
+	time_zone = models.CharField(max_length=200, db_index=True)
+	location = models.CharField(max_length=200, db_index=True)
+	verified = models.BooleanField()
+	lang = models.CharField(max_length=10)
+	insertdate = models.DateField(default=datetime.date.today)
+
+	def __str__(self):
+		return self.screen_name
+
+	class Meta:
+		unique_together = (('user_id', 'insertdate'),)

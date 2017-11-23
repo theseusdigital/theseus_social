@@ -38,3 +38,6 @@
 15 4-22/3 * * * /home/nishant/theseus_social/shscripts/facebookhashtags.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHASHTAGS
 
 16 4-22/3 * * * /home/nishant/theseus_social/shscripts/twitterhashtags.sh > /home/nishant/theseus_social/logs/LOG_TWITTERHASHTAGS
+
+# Cron to get recent followers per day for specific handles
+58 */1 * * * /home/nishant/theseus_social/shscripts/followersscrape.sh > /home/nishant/theseus_social/logs/LOG_FOLLOWERSSCRAPE
