@@ -39,7 +39,15 @@ class TwitterFollowers:
 		self.appindex = 0
 
 	def handle_twitter(self):
-		self.getFollowers()
+		requests = 0
+		self.nextcursor = -1
+		self.getFollowers = True
+		print "HANDLE ==> %s %s Date ==> %s"%(self.handle.id, self.handle.name, todaydate)
+		while self.getFollowers:
+			self.queryFollowers()
+			requests += 1
+			if requests == 1:
+				break
 		dbs.close()
 
 	def connect_to_api(self):
@@ -77,18 +85,23 @@ class TwitterFollowers:
 		self.twapp.save()
 		print message
 
-	def getFollowers(self):
+	def queryFollowers(self):
 		twitterapi = self.connect_to_api()
 		try:
-			print "HANDLE ==> %s %s Date ==> %s"%(self.handle.id, self.handle.name, todaydate)
-			followers = twitterapi.followers.list(screen_name = self.handle.name, count = 100)
+			followers = twitterapi.followers.list(screen_name = self.handle.name, count = 200, cursor = self.nextcursor)
+			self.nextcursor = followers.get('next_cursor',False)
+			self.parse_followers(followers['users'])
+			if self.nextcursor == False:
+				self.getFollowers = False
 		except TwitterHTTPError as e:
 			self.raise_apierror(e)
-			return False
+			self.getFollowers = False
+
+	def parse_followers(self, followers):
 		newfollowers = 0
 		updatedfollowers = 0
-		followers['users'].reverse()
-		for user_obj in followers['users']:
+		followers.reverse()
+		for user_obj in followers:
 			utc_offset = self.checkifnull(user_obj.get('utc_offset', 0))
 			time_zone = self.checkifnull(user_obj.get('time_zone', 0))
 			userdetails = {
@@ -118,7 +131,7 @@ class TwitterFollowers:
 				newfollowers += 1
 				# print 'Saved Follower: %s for Date: %s'%(userdetails['user_id'], userdetails['insertdate'])
 			except MySQLdb.IntegrityError:
-				uniquecolumns = ["user_id","insertdate"]
+				uniquecolumns = ["handle_id","user_id"]
 				user_query,user_data = safe_update("tracker_twitterfollowers",uniquecolumns,userdetails)
 				cursor.execute(user_query, user_data)
 				updatedfollowers += 1
@@ -131,6 +144,7 @@ class TwitterFollowers:
 			cursor.close()
 		print "New Followers: %s"%(newfollowers)
 		print "Updated Followers: %s"%(updatedfollowers)
+
 
 	def checkifnull(self, value):
 		if value is None:

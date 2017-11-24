@@ -474,4 +474,4 @@ class TwitterFollowers(models.Model):
 		return self.screen_name
 
 	class Meta:
-		unique_together = (('user_id', 'insertdate'),)
+		unique_together = (('handle', 'user_id'),)
