@@ -21,8 +21,8 @@ def getpoststats(handle, gobackdays = 7):
 	since = sincedate
 	until = todaydate
 	cursor = db.cursor()
-	query = "select sum(likes) as postlikes, sum(comments) as postcomments, count(1) as postsnum,"+\
-		" date(published) as postdate from tracker_instagramhandlepost where handle_id = %s and"+\
+	query = "select sum(likes) as postlikes, sum(comments) as postcomments, sum(views) as postviews,"+\
+		" count(1) as postsnum, date(published) as postdate from tracker_instagramhandlepost where handle_id = %s and"+\
 		" published >= '%s 00:00:00' and published <= '%s 23:59:59' group by postdate"
 	query = query%(handle.id, since, until)
 	# print query
@@ -34,6 +34,7 @@ def getpoststats(handle, gobackdays = 7):
 		daywiserows[r['postdate']] = {}
 		daywiserows[r['postdate']]['postlikes'] = r['postlikes']
 		daywiserows[r['postdate']]['postcomments'] = r['postcomments']
+		daywiserows[r['postdate']]['postviews'] = r['postviews']
 		daywiserows[r['postdate']]['postsnum'] = r['postsnum']
 	cursor.close()
 	# pp.pprint(daywiserows)
@@ -67,7 +68,7 @@ if __name__ == '__main__':
 	else:
 		gobackdays = 7
 	datelist = [(todaydate - datetime.timedelta(days = days)) for days in range(gobackdays)]
-	ighandles = Handle.objects.filter(platform_id = 4, status = 1)
+	ighandles = Handle.objects.filter(platform_id = 4, status__in = [1,2])
 	for handle in ighandles:
 		print "\nHANDLE ==> %s %s"%(handle.id, handle.name)
 		print "DATERANGE: %s to %s"%(datelist[-1], datelist[0])
@@ -103,7 +104,12 @@ if __name__ == '__main__':
 			try:
 				tempdict['comments'] = brandpost_stats[day]['postcomments']
 			except KeyError:
-				tempdict['comments'] = 0 
+				tempdict['comments'] = 0
+
+			try:
+				tempdict['views'] = brandpost_stats[day]['postviews']
+			except KeyError:
+				tempdict['views'] = 0
 
 			try:
 				tempdict['posts'] = brandpost_stats[day]['postsnum']

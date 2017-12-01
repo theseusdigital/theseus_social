@@ -108,7 +108,7 @@ class HandleDailyNumbers:
 	def handle_instagram(self):
 		print "\nINSTAGRAM"
 		print "TODAY: %s"%(todaydate)
-		ighandles = Handle.objects.filter(platform_id = 4, status = 1)
+		ighandles = Handle.objects.filter(platform_id = 4, status__in = [1,2])
 		for handle in ighandles:
 			try:
 				iguser = InstagramUser.objects.get(uniqueid = handle.uniqueid)

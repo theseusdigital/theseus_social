@@ -447,6 +447,7 @@ class SocialMediaInstagram(models.Model):
 	posts = models.IntegerField(default=0)
 	likes = models.IntegerField(default=0)
 	comments = models.IntegerField(default=0)
+	views = models.IntegerField(default=0)
 
 	class Meta:
 		unique_together = (('handle', 'reportdate'),)
