@@ -106,13 +106,13 @@ class InstagramScraper:
 			user_query,user_data = safe_insert("tracker_instagramuser",userdetails)
 			cursor.execute(user_query, user_data)
 			# FacebookUser(**userdetails).save()
-			print 'Saved Facebook User: %s'%(userdetails['uniqueid'])
+			print 'Saved Instagram User: %s'%(userdetails['uniqueid'])
 		except MySQLdb.IntegrityError:
 			uniquecolumns = ["uniqueid"]
 			user_query,user_data = safe_update("tracker_instagramuser",uniquecolumns,userdetails)
 			cursor.execute(user_query, user_data)
 			# FacebookUser.objects.filter(uniqueid=userdetails['uniqueid']).update(**userdetails)
-			print 'Updated Facebook User: %s'%(userdetails['uniqueid'])
+			print 'Updated Instagram User: %s'%(userdetails['uniqueid'])
 		except Exception as e:
 			print e
 			cursor.close()
@@ -176,6 +176,7 @@ class InstagramScraper:
 			posts['published_date'] = dt_published.strftime('%Y-%m-%d')
 			posts['lastupdated'] = datetime.datetime.now()
 			posts['posttype'] = p.get('type')
+			posts['views'] = 0
 			# pp.pprint(posts)
 			cursor = dbs.cursor()
 			try:
@@ -183,6 +184,7 @@ class InstagramScraper:
 				cursor.execute(post_query, post_data)		
 				savedposts.append(posts['postid'])
 			except MySQLdb.IntegrityError:
+				del posts['views']
 				uniquecolumns = ["handle_id","postid"]
 				post_query,post_data = safe_update("tracker_instagramhandlepost",uniquecolumns,posts)
 				cursor.execute(post_query, post_data)

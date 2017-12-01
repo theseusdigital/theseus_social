@@ -136,40 +136,69 @@ def getYoutubeHandles(keyword, handle_id = None):
 		pp.pprint(response)
 		return False
 
+# def getInstagramHandles(keyword, handle_id = None):
+# 	handle_query = keyword.name.split(":")[-1]
+# 	current_token = igapps[random.randint(0,len(igapps)-1)]
+# 	apiurl =  "https://api.instagram.com/v1/users/search?q=%s&access_token=%s&count=1"
+# 	apiurl = apiurl % (handle_query,current_token.access_token)
+# 	print "IGURL=> "+apiurl
+# 	response = urlopen(apiurl)
+# 	data = json.loads(response.read())
+# 	if data.get('data'):
+# 		igdata = data['data']
+# 		if len(igdata)>0:
+# 			igdata = igdata[0]
+# 			pp.pprint(igdata)
+# 			if igdata.get("username"):
+# 				handlename = igdata['username']
+# 			else: 
+# 				handlename = keyword.name
+# 			handledetails = {}
+# 			handledetails['name'] = handlename
+# 			handledetails['uniqueid'] = igdata['id']
+# 			handledetails['platform_id'] = 4
+# 			handledetails['keyword_id'] = keyword.id
+# 			handledetails['status'] = STATUS
+# 			if handle_id:
+# 				handledetails['id'] = handle_id
+
+# 			handle = Handle(**handledetails)
+# 			handle.save()
+# 			pp.pprint(handledetails)
+# 			print 'Instagram Handle Saved'
+# 			return True
+# 	print 'No Instagram Handles Found for keyword '+keyword.name
+# 	pp.pprint(data)
+# 	return False
+
 def getInstagramHandles(keyword, handle_id = None):
 	handle_query = keyword.name.split(":")[-1]
-	current_token = igapps[random.randint(0,len(igapps)-1)]
-	# graph = facebook.GraphAPI(access_token=current_token, version='2.7')
-	apiurl =  "https://api.instagram.com/v1/users/search?q=%s&access_token=%s&count=1"
-	apiurl = apiurl % (handle_query,current_token.access_token)
-	print "IGURL=> "+apiurl
-	response = urlopen(apiurl)
+	igurl =  "https://www.instagram.com/%s/?__a=1"
+	igurl = igurl % (handle_query)
+	print "IGURL=> "+igurl
+	response = urlopen(igurl)
 	data = json.loads(response.read())
-	if data.get('data'):
-		igdata = data['data']
-		if len(igdata)>0:
-			igdata = igdata[0]
-			pp.pprint(igdata)
-			if igdata.get("username"):
-				handlename = igdata['username']
-			else: 
-				handlename = keyword.name
-			handledetails = {}
-			handledetails['name'] = handlename
-			handledetails['uniqueid'] = igdata['id']
-			handledetails['platform_id'] = 4
-			handledetails['keyword_id'] = keyword.id
-			handledetails['status'] = STATUS
-			if handle_id:
-				handledetails['id'] = handle_id
+	if data.get('user'):
+		igdata = data['user']
+		if igdata.get("username"):
+			handlename = igdata['username']
+		else: 
+			handlename = keyword.name
+		handledetails = {}
+		handledetails['name'] = handlename
+		handledetails['uniqueid'] = igdata['id']
+		handledetails['platform_id'] = 4
+		handledetails['keyword_id'] = keyword.id
+		handledetails['status'] = STATUS
+		if handle_id:
+			handledetails['id'] = handle_id
 
-			handle = Handle(**handledetails)
-			handle.save()
-			pp.pprint(handledetails)
-			print 'Instagram Handle Saved'
-			return True
+		handle = Handle(**handledetails)
+		handle.save()
+		pp.pprint(handledetails)
+		print 'Instagram Handle Saved'
+		return True
 	print 'No Instagram Handles Found for keyword '+keyword.name
-	pp.pprint(data)
 	return False
 
 if __name__ == '__main__':

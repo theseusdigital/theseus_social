@@ -423,6 +423,7 @@ class InstagramHandlePost(models.Model):
 	author = models.BigIntegerField()
 	likes = models.IntegerField(default=0)
 	comments = models.IntegerField(default=0)
+	views = models.IntegerField(default=0)
 	tags = models.CharField(max_length=500)
 	published = models.DateTimeField(db_index=True)
 	published_date = models.DateField(db_index=True)
