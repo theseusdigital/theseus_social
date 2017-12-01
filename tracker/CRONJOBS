@@ -41,3 +41,6 @@
 
 # Cron to get recent followers per day for specific handles
 58 */1 * * * /home/nishant/theseus_social/shscripts/followersscrape.sh > /home/nishant/theseus_social/logs/LOG_FOLLOWERSSCRAPE
+
+# Cron to get 7 day old Instagram Posts for handles using selenium webdriver
+5 */1 * * * /home/nishant/theseus_social/shscripts/instagramscrapebot.sh > /home/nishant/theseus_social/logs/LOG_INSTAGRAMSCRAPEBOT
