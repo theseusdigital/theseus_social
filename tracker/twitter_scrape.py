@@ -150,6 +150,12 @@ class TwitterScraper:
 			print "REQUESTS: %s"%(self.requests)
 			return False
 		# pp.pprint(user_obj)
+		utc_offset = user_obj.get('utc_offset', 0)
+		if utc_offset == None:
+			utc_offset = 0
+		time_zone = user_obj.get('time_zone', 0)
+		if time_zone == None:
+			time_zone = 0
 		userdetails = {
 				'user_id': user_obj.get('id_str'),
 				'name': user_obj.get('name').encode('unicode_escape'),
@@ -162,8 +168,8 @@ class TwitterScraper:
 				'listed_count': user_obj.get('listed_count', 0),
 				'friends_count': user_obj.get('friends_count', 0),
 				'profile_image_url': user_obj.get('profile_image_url', ''),
-				'utc_offset': user_obj.get('utc_offset', 0),
-				'time_zone': user_obj.get('time_zone', 0),
+				'utc_offset': utc_offset,
+				'time_zone': time_zone,
 				'location': user_obj.get('location', '').encode('unicode_escape'),
 				'verified': user_obj.get('verified', False),
 				'lang': user_obj.get('lang', 'en'),

@@ -209,7 +209,10 @@ class InstagramScraper:
 							try:
 								post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/img").get_attribute('src')
 							except:
-								post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/img").get_attribute('src')
+								try:
+									post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/img").get_attribute('src')
+								except:
+									post_img = ""
 					else:
 						'''getting video thumbnail image & video url'''
 						try:
