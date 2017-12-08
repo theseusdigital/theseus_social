@@ -230,7 +230,23 @@ class InstagramScraper:
 							post_comments = int(post_comments)
 						else:
 							if "Load more" in comments_li:
-								commentsoffset = 3
+								try:
+									loaded = False
+									print "Loading more comments"
+									while True:
+										loadmorebutton = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a")
+										time.sleep(2)
+										loadmorebutton.click()
+										if loaded:
+											break
+										time.sleep(3)
+										buttontext = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a").text
+										if "View all" in buttontext:
+											print buttontext
+											loaded = True
+									commentsoffset = 2
+								except:
+									commentsoffset = 3
 							else:
 								commentsoffset = 2
 
