@@ -180,6 +180,7 @@ class FacebookHandlePost(models.Model):
 	addedtime = models.DateTimeField(db_index=True)
 	lastupdated = models.DateTimeField(db_index=True)
 	tagged = models.IntegerField(default=0,db_index=True)
+	active = models.BooleanField(db_index=True, default=True)
 
 class SocialMediaFacebook(models.Model):
 	handle = models.ForeignKey(Handle, db_index=True, default = 1)
@@ -245,6 +246,7 @@ class HandleTweet(models.Model):
 	entities_urls = models.CharField(max_length=500)
 	entities_user_mentions = models.CharField(max_length=500)
 	entities_media = models.CharField(max_length=500)
+	active = models.BooleanField(db_index=True, default=True)
 
 	class Meta:
 		unique_together = (('handle', 'tweet_id'),)
@@ -376,6 +378,7 @@ class YoutubeChannelVideo(models.Model):
 	favorites = models.IntegerField()
 	sharedonfb = models.IntegerField(default=0)
 	published = models.DateTimeField(db_index=True)
+	active = models.BooleanField(db_index=True, default=True)
 
 class YoutubeDailyNums(models.Model):
 	handle = models.ForeignKey(Handle,db_index=True)
@@ -428,6 +431,7 @@ class InstagramHandlePost(models.Model):
 	published = models.DateTimeField(db_index=True)
 	published_date = models.DateField(db_index=True)
 	lastupdated = models.DateTimeField(db_index=True)
+	active = models.BooleanField(db_index=True, default=True)
 
 class InstagramDailyNums(models.Model):
 	handle = models.ForeignKey(Handle,db_index=True)

@@ -248,6 +248,7 @@ class TwitterHashtags:
 			    parsed_tweet['in_reply_to_status_id'] = 0
 
 			parsed_tweet['user_id'] = tweet['user']['id_str']
+			parsed_tweet['active'] = True
 			parsed_tweets.append(parsed_tweet)
 		return parsed_tweets
 

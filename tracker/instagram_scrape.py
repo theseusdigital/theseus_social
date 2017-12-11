@@ -177,6 +177,7 @@ class InstagramScraper:
 			posts['lastupdated'] = datetime.datetime.now()
 			posts['posttype'] = p.get('type')
 			posts['views'] = 0
+			posts['active'] = True
 			# pp.pprint(posts)
 			cursor = dbs.cursor()
 			try:

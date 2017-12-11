@@ -283,7 +283,7 @@ class InstagramScraper:
 					igpost = {'handle_id':handle.id,'postid':mediaid,'caption':post_message,'tags':post_hashtags,'posttype':post_type,
 								'url':post_url,'postimg':post_img,'author':post_authorid,'likes':post_likes,'views':post_views,
 								'comments':post_comments,'published':post_time,'published_date':post_date,
-								'lastupdated':datetime.datetime.now()}
+								'lastupdated':datetime.datetime.now(),'active':True}
 
 					# pp.pprint(igpost)
 					totalposts += 1

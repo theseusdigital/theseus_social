@@ -197,6 +197,7 @@ class YoutubeScraper:
 			vid['youtubeid'] = itm['contentDetails']['videoId']
 			vid['title'] = itm['snippet']['title'].encode('unicode_escape')
 			vid['description'] = itm['snippet']['description'].encode('unicode_escape')[:255]
+			vid['active'] = True
 			videos.append(vid)
 
 		print "%s Videos Found"%(len(videos))

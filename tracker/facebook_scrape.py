@@ -231,6 +231,7 @@ class FacebookScraper:
 			else:
 				posts['fanpost'] = 1
 			posts['tagged'] = 0
+			posts['active'] = True
 			cursor = dbs.cursor()
 			try:
 				post_query,post_data = safe_insert("tracker_facebookhandlepost",posts)
