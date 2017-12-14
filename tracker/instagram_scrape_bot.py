@@ -156,139 +156,40 @@ class InstagramScraper:
 					time.sleep(2)
 					scrollelement.click()
 					time.sleep(3)
-					postlb_time = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[2]/a/time").get_attribute('datetime') 
-					post_time = datetime.datetime(*time.strptime(postlb_time,'%Y-%m-%dT%H:%M:%S.000Z')[0:6])
-					post_time = post_time + india_offset
-					post_date = post_time.date()
-					lastpostdate = post_date
+					postdatetime = self.getPostDateTime()
+					igpost['published'] = postdatetime[0]
+					igpost['published_date'] = postdatetime[1]
+					lastpostdate = igpost['published_date']
 					if lastpostdate < self.since:
 					    # print "Posts Retrieved Since %s"%(self.since)
 					    break
 
-					post_url = self.driver.current_url.split("?")[0]
-					try:  
-						post_message = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[1]/span").text
-					except:
-						post_message = ""
-					post_hashtags = self.get_hashtags(post_message)
+					post_message = self.getPostText()
+					igpost['tags'] = self.get_hashtags(post_message)
 					post_message = post_message.encode('unicode_escape')[:255]
+					igpost['caption'] = post_message
 
-					try:
-						'''if it shows n Likes or n Views'''
-						post_numbers_obj = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div/span")
-						post_numbers = post_numbers_obj.text
-						post_metric = post_numbers.split(' ')[-1]
-						post_score = int(post_numbers.split(' ')[0].replace(',',''))
-					except:
-						'''if likes are very less'''
-						post_numbers_obj = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div")
-						post_numbers = post_numbers_obj.get_attribute("innerHTML")
-						post_metric = "likes"
-						post_score = int(len(post_numbers.split("/a>")) - 1)
+					likesviews = self.getLikesViews()
+					igpost['posttype'] = likesviews[0]
+					igpost['likes'] = likesviews[1]
+					igpost['views'] = likesviews[2]
+					igpost['postimg'] = self.getImage(igpost['posttype'])
+					
+					igpost['comments'] = self.getComments(post_message)
 
-					if post_metric == "likes":
-						post_type = "image"
-						post_likes = post_score
-						post_views = 0
-					else:
-						post_type = "video"
-						post_views = post_score
-						'''getting likes for video posts'''
-						try:
-							post_numbers_obj.click()
-							post_likes = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div/div/div[4]/span").text
-							post_likes = int(post_likes.replace(',',''))
-						except:
-							post_likes = 0
-
-					if post_type == "image":
-						'''getting image url'''
-						try:
-							post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/img").get_attribute('src')
-						except:
-							try:
-								post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/img").get_attribute('src')
-							except:
-								try:
-									post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/img").get_attribute('src')
-								except:
-									post_img = ""
-					else:
-						'''getting video thumbnail image & video url'''
-						try:
-							post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/div[1]/video").get_attribute('poster')
-							post_video = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/div[1]/video").get_attribute('src')
-						except:
-							post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/video").get_attribute('poster')
-							post_video = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/video").get_attribute('src')
-
-					try:
-						'''if it shows "View All n Comments"'''
-						comments_li = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a").text
-						if "View all" in comments_li:
-							post_comments = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a/span").text
-							post_comments = int(post_comments)
-						else:
-							if "Load more" in comments_li:
-								try:
-									loaded = False
-									print "Loading more comments"
-									while True:
-										loadmorebutton = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a")
-										time.sleep(2)
-										loadmorebutton.click()
-										if loaded:
-											break
-										time.sleep(3)
-										buttontext = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a").text
-										if "View all" in buttontext:
-											print buttontext
-											loaded = True
-									commentsoffset = 2
-								except:
-									commentsoffset = 3
-							else:
-								commentsoffset = 2
-
-							'''if comments are very less or not truncated'''
-							try:
-								post_comments = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul").get_attribute("innerHTML")
-							except:
-								post_comments = ""
-
-							commentslist = post_comments.split("</li>")        
-							if post_message == '':
-							    commentsoffset = 1
-
-							if len(commentslist)>1:
-							    post_comments = len(commentslist) - commentsoffset
-							else:
-							    post_comments = 0
-
-					except:
-						print "No Comments"
-						post_comments = 0
-
-					url = self.postdetailsurl % (post_url)
-					response,content = self.http.request(uri=url, method='GET')
-					json_data = json.loads(content)
-
-					try:
-					    mediaid = json_data['media_id'].split('_')[0]
-					    post_authorid = json_data['author_id']
-					except:
-					    mediaid = 0
-					    post_authorid = 0
-
-					igpost = {'handle_id':handle.id,'postid':mediaid,'caption':post_message,'tags':post_hashtags,'posttype':post_type,
-								'url':post_url,'postimg':post_img,'author':post_authorid,'likes':post_likes,'views':post_views,
-								'comments':post_comments,'published':post_time,'published_date':post_date,
-								'lastupdated':datetime.datetime.now(),'active':True}
+					post_url = self.driver.current_url.split("?")[0]
+					postmeta = self.getPostMeta(post_url)
+					igpost['postid'] = postmeta[0]
+					igpost['author'] = postmeta[1]
+					igpost['url'] = post_url
+					igpost['handle_id'] = handle.id
+					igpost['lastupdated'] = datetime.datetime.now()
+					igpost['active'] = True
 
 					# pp.pprint(igpost)
 					totalposts += 1
 					self.savePost(igpost)
-					print "%s %s Posts for HANDLE %s"%(post_url,totalposts,self.handle.name)
+					print "%s at %s | %s Posts for HANDLE %s"%(post_url,igpost['published'],totalposts,self.handle.name)
 
 					exitpost = self.driver.find_element_by_xpath("html/body/div[4]/div/button")
 					exitpost.click()
@@ -316,6 +217,135 @@ class InstagramScraper:
 			print "%s Posts Saved"%(self.savedposts)
 			print "%s Posts Updated\n"%(self.updatedposts)
 
+	def getPostMeta(self, post_url):
+		url = self.postdetailsurl % (post_url)
+		response,content = self.http.request(uri=url, method='GET')
+		json_data = json.loads(content)
+
+		try:
+		    postid = json_data['media_id'].split('_')[0]
+		    authorid = json_data['author_id']
+		except:
+		    postid = 0
+		    authorid = 0
+		return [postid,authorid]
+
+	def getPostText(self):
+		try:
+			post_message = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[1]/span").text
+		except:
+			post_message = ""
+		return post_message
+
+	def getPostDateTime(self):
+		postlb_time = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[2]/a/time").get_attribute('datetime') 
+		post_time = datetime.datetime(*time.strptime(postlb_time,'%Y-%m-%dT%H:%M:%S.000Z')[0:6])
+		post_time = post_time + india_offset
+		post_date = post_time.date()
+		return [post_time, post_date]
+
+	def getImage(self, post_type):
+		if post_type == "image":
+			'''getting image url'''
+			try:
+				post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/img").get_attribute('src')
+			except:
+				try:
+					post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/img").get_attribute('src')
+				except:
+					try:
+						post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/img").get_attribute('src')
+					except:
+						post_img = ""
+		else:
+			'''getting video thumbnail image & video url'''
+			try:
+				post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/div[1]/video").get_attribute('poster')
+				post_video = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/div[1]/video").get_attribute('src')
+			except:
+				post_img = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/video").get_attribute('poster')
+				post_video = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[1]/div/div[1]/div[1]/div[1]/div[1]/video").get_attribute('src')
+
+		return post_img
+
+	def getLikesViews(self):
+		try:
+			'''if it shows n Likes or n Views'''
+			post_numbers_obj = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div/span")
+			post_numbers = post_numbers_obj.text
+			post_metric = post_numbers.split(' ')[-1]
+			post_score = int(post_numbers.split(' ')[0].replace(',',''))
+		except:
+			'''if likes are very less'''
+			post_numbers_obj = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div")
+			post_numbers = post_numbers_obj.get_attribute("innerHTML")
+			post_metric = "likes"
+			post_score = int(len(post_numbers.split("/a>")) - 1)
+
+		if post_metric == "likes":
+			post_type = "image"
+			post_likes = post_score
+			post_views = 0
+		else:
+			post_type = "video"
+			post_views = post_score
+			'''getting likes for video posts'''
+			try:
+				post_numbers_obj.click()
+				post_likes = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/section[2]/div/div/div[4]/span").text
+				post_likes = int(post_likes.replace(',',''))
+			except:
+				post_likes = 0
+		return [post_type,post_likes,post_views]
+
+	def getComments(self, post_message):
+		try:
+			'''if it shows "View All n Comments"'''
+			comments_li = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a").text
+			if "View all" in comments_li:
+				post_comments = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a/span").text
+				post_comments = int(post_comments)
+			else:
+				if "Load more" in comments_li:
+					try:
+						loaded = False
+						print "Loading more comments"
+						while True:
+							loadmorebutton = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a")
+							time.sleep(2)
+							loadmorebutton.click()
+							time.sleep(3)
+							if loaded:
+								break
+							buttontext = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul/li[2]/a").text
+							if "View all" in buttontext:
+								print buttontext
+								loaded = True
+						commentsoffset = 2
+					except:
+						commentsoffset = 3
+				else:
+					commentsoffset = 2
+
+				'''if comments are very less or not truncated'''
+				try:
+					post_comments = self.driver.find_element_by_xpath("html/body/div[4]/div/div[2]/div/article/div[2]/div[1]/ul").get_attribute("innerHTML")
+				except:
+					post_comments = ""
+
+				commentslist = post_comments.split("</li>")        
+				if post_message == '':
+				    commentsoffset = 1
+
+				if len(commentslist)>1:
+				    post_comments = len(commentslist) - commentsoffset
+				else:
+				    post_comments = 0
+		except:
+			print "No Comments"
+			post_comments = 0
+		return post_comments
+
 	def savePost(self, post):
 		cursor = dbs.cursor()
 		try:
@@ -323,9 +353,9 @@ class InstagramScraper:
 			cursor.execute(post_query, post_data)		
 			self.savedposts += 1
 		except MySQLdb.IntegrityError:
-			'''not updating comments for api enabled handles i.e status=1'''
-			if self.handle.status == 1:
-				del post['comments']
+			# '''not updating comments for api enabled handles i.e status=1'''
+			# if self.handle.status == 1:
+			# 	del post['comments']
 			uniquecolumns = ["handle_id","postid"]
 			post_query,post_data = safe_update("tracker_instagramhandlepost",uniquecolumns,post)
 			cursor.execute(post_query, post_data)
