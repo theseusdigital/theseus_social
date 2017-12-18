@@ -4,7 +4,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "theseus_social.settings")
 django.setup()
 
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import random
 import datetime
@@ -154,6 +158,7 @@ class InstagramScraper:
 					    getPosts = False
 					    break
 					time.sleep(2)
+					hovercomments = self.getCommentsOnHover(scrollelement,xpathid)
 					scrollelement.click()
 					time.sleep(3)
 					postdatetime = self.getPostDateTime()
@@ -175,7 +180,13 @@ class InstagramScraper:
 					igpost['views'] = likesviews[2]
 					igpost['postimg'] = self.getImage(igpost['posttype'])
 					
-					igpost['comments'] = self.getComments(post_message)
+					if hovercomments == -1:
+						'''if some error occurred while hovering for comments'''
+						print "getting truncated comments"
+						igpost['comments'] = self.getComments(post_message)
+					else:
+						'''Comments on post hover'''
+						igpost['comments'] = hovercomments
 
 					post_url = self.driver.current_url.split("?")[0]
 					postmeta = self.getPostMeta(post_url)
@@ -189,7 +200,9 @@ class InstagramScraper:
 					# pp.pprint(igpost)
 					totalposts += 1
 					self.savePost(igpost)
-					print "%s at %s | %s Posts for HANDLE %s"%(post_url,igpost['published'],totalposts,self.handle.name)
+					print "%s at %s | %s Likes | %s Comments | %s Views | %s #%s"%(post_url,igpost['published'],igpost['likes'],
+																					igpost['comments'],igpost['views'],
+																					self.handle.name,totalposts)
 
 					exitpost = self.driver.find_element_by_xpath("html/body/div[4]/div/button")
 					exitpost.click()
@@ -216,6 +229,30 @@ class InstagramScraper:
 
 			print "%s Posts Saved"%(self.savedposts)
 			print "%s Posts Updated\n"%(self.updatedposts)
+
+	def getCommentsOnHover(self, elem, xpath):
+		try:
+			ActionChains(self.driver).move_to_element(elem).perform()
+		except Exception as e:
+			print "Hover Element Not Found"
+			return -1
+		try:
+			time.sleep(1)
+			# floatingdiv = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, xpath+"/div[3]")))
+			hovercomments = self.driver.find_element_by_xpath(xpath+"/div[3]/ul/li[2]/span").text
+		except WebDriverException:
+			try:
+				# floatingdiv = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, xpath+"/div[2]")))
+				hovercomments = self.driver.find_element_by_xpath(xpath+"/div[2]/ul/li[2]/span").text
+			except WebDriverException as e:
+				print "HOVER ERROR"
+				# print e
+				hovercomments = -1
+				return hovercomments
+
+		hovercomments = int(hovercomments.replace("k","000"))
+		# print "%s comments on HOVER"%(hovercomments)
+		return hovercomments
 
 	def getPostMeta(self, post_url):
 		url = self.postdetailsurl % (post_url)
