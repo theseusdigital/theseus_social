@@ -1,46 +1,46 @@
 # Cron to get 7 day old FB Posts for handles
-25 2-23/3 * * * /home/nishant/theseus_social/shscripts/facebookhandleposts.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTS
+25 2-23/3 * * * /home/theseus/theseus_social/shscripts/facebookhandleposts.sh > /home/theseus/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTS
 
 # Cron to get 7 day old Youtube Videos for handles
-30 2-23/3 * * * /home/nishant/theseus_social/shscripts/youtubechannelvideos.sh > /home/nishant/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOS
+30 2-23/3 * * * /home/theseus/theseus_social/shscripts/youtubechannelvideos.sh > /home/theseus/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOS
 
 # Cron to get 7 day old Tweets for handles
-35 2-23/3 * * * /home/nishant/theseus_social/shscripts/handletweets.sh > /home/nishant/theseus_social/logs/LOG_HANDLETWEETS
+35 2-23/3 * * * /home/theseus/theseus_social/shscripts/handletweets.sh > /home/theseus/theseus_social/logs/LOG_HANDLETWEETS
 
 # Cron to get 7 day old Instagram Posts for handles
-45 */1 * * * /home/nishant/theseus_social/shscripts/instagramhandleposts.sh > /home/nishant/theseus_social/logs/LOG_INSTAGRAMHANDLEPOSTS
+45 */1 * * * /home/theseus/theseus_social/shscripts/instagramhandleposts.sh > /home/theseus/theseus_social/logs/LOG_INSTAGRAMHANDLEPOSTS
 
 # Dailynums crons
-50 */1 * * * /home/nishant/theseus_social/shscripts/handledailynumbers.sh > /home/nishant/theseus_social/logs/LOG_HANDLEDAILYNUMBERS
+50 */1 * * * /home/theseus/theseus_social/shscripts/handledailynumbers.sh > /home/theseus/theseus_social/logs/LOG_HANDLEDAILYNUMBERS
 
 # Social Media Scripts
-55 */1 * * * /home/nishant/theseus_social/shscripts/socialmedia.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIA
+55 */1 * * * /home/theseus/theseus_social/shscripts/socialmedia.sh > /home/theseus/theseus_social/logs/LOG_SOCIALMEDIA
 
 # Scrape Status
-56 23 * * * /home/nishant/theseus_social/shscripts/scrapestatus.sh > /home/nishant/theseus_social/logs/LOG_SCRAPESTATUS
+56 23 * * * /home/theseus/theseus_social/shscripts/scrapestatus.sh > /home/theseus/theseus_social/logs/LOG_SCRAPESTATUS
 
 # Cron to get 30 day old FB Posts for handles
-0 1 * * * /home/nishant/theseus_social/shscripts/facebookhandlepostsold.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
+0 1 * * * /home/theseus/theseus_social/shscripts/facebookhandlepostsold.sh > /home/theseus/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
 
 # Cron to get 30 day old Youtube Videos for handles
-10 1 * * * /home/nishant/theseus_social/shscripts/youtubechannelvideosold.sh > /home/nishant/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
+10 1 * * * /home/theseus/theseus_social/shscripts/youtubechannelvideosold.sh > /home/theseus/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
 
 # Cron to get 30 day old Tweets for handles
-#20 1 * * * /home/nishant/theseus_social/shscripts/handletweetsold.sh > /home/nishant/theseus_social/logs/LOG_HANDLETWEETSOLD
+#20 1 * * * /home/theseus/theseus_social/shscripts/handletweetsold.sh > /home/theseus/theseus_social/logs/LOG_HANDLETWEETSOLD
 
 # Social Media Scripts for Last 30 days
-58 23 * * * /home/nishant/theseus_social/shscripts/socialmediaold.sh > /home/nishant/theseus_social/logs/LOG_SOCIALMEDIAOLD
+58 23 * * * /home/theseus/theseus_social/shscripts/socialmediaold.sh > /home/theseus/theseus_social/logs/LOG_SOCIALMEDIAOLD
 
 # Hashtag Tracking Scripts
-#0,15,30,45 * * * * /home/nishant/theseus_social/shscripts/hashtagscrape.sh > /home/nishant/theseus_social/logs/LOG_HASHTAGSCRAPE
+#0,15,30,45 * * * * /home/theseus/theseus_social/shscripts/hashtagscrape.sh > /home/theseus/theseus_social/logs/LOG_HASHTAGSCRAPE
 
 # Cron to get 2 day old Posts for Hashtracking Handles
-15 4-22/3 * * * /home/nishant/theseus_social/shscripts/facebookhashtags.sh > /home/nishant/theseus_social/logs/LOG_FACEBOOKHASHTAGS
+15 4-22/3 * * * /home/theseus/theseus_social/shscripts/facebookhashtags.sh > /home/theseus/theseus_social/logs/LOG_FACEBOOKHASHTAGS
 
-16 4-22/3 * * * /home/nishant/theseus_social/shscripts/twitterhashtags.sh > /home/nishant/theseus_social/logs/LOG_TWITTERHASHTAGS
+16 4-22/3 * * * /home/theseus/theseus_social/shscripts/twitterhashtags.sh > /home/theseus/theseus_social/logs/LOG_TWITTERHASHTAGS
 
 # Cron to get recent followers per day for specific handles
-58 */1 * * * /home/nishant/theseus_social/shscripts/followersscrape.sh > /home/nishant/theseus_social/logs/LOG_FOLLOWERSSCRAPE
+58 */1 * * * /home/theseus/theseus_social/shscripts/followersscrape.sh > /home/theseus/theseus_social/logs/LOG_FOLLOWERSSCRAPE
 
 # Cron to get 7 day old Instagram Posts for handles using selenium webdriver
-5 */1 * * * /home/nishant/theseus_social/shscripts/instagramscrapebot.sh > /home/nishant/theseus_social/logs/LOG_INSTAGRAMSCRAPEBOT
+#5 */1 * * * /home/theseus/theseus_social/shscripts/instagramscrapebot.sh > /home/theseus/theseus_social/logs/LOG_INSTAGRAMSCRAPEBOT
