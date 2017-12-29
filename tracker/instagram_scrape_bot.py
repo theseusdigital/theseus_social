@@ -30,7 +30,7 @@ import re
 todaydate = datetime.datetime.today().date()
 
 india_offset = timedelta(hours = 5,minutes = 30)
-dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='theseus_social',charset='utf8')
+dbs = MySQLdb.connect(host='localhost',user='tracker',passwd='tracker123',db='theseus_social',charset='utf8')
 re_hash = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([_A-Za-z]+[A-Za-z0-9]+)')
 
 class InstagramScraper:

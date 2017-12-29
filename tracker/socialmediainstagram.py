@@ -11,7 +11,7 @@ from django.db import IntegrityError
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-db = MySQLdb.connect(host='localhost', user='theseus', passwd='theseus123',
+db = MySQLdb.connect(host='localhost', user='tracker', passwd='tracker123',
 						db='theseus_social', charset='utf8',
 						cursorclass=MySQLdb.cursors.DictCursor)
 todaydate = datetime.datetime.today().date()

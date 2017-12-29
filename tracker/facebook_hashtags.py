@@ -26,7 +26,7 @@ import re
 todaydate = datetime.datetime.today()
 todaydate = datetime.date(todaydate.year,todaydate.month,todaydate.day)
 
-dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='theseus_social',charset='utf8')
+dbs = MySQLdb.connect(host='localhost',user='tracker',passwd='tracker123',db='theseus_social',charset='utf8')
 
 re_hash = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([_A-Za-z]+[A-Za-z0-9]+)')
 

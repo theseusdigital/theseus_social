@@ -1,4 +1,4 @@
-. /home/nishant/theseus_social/shscripts/common.sh
+. /home/theseus/theseus_social/shscripts/common.sh
 echo "socialmediafacebook 30 days"
 $PY_EXEC tracker/socialmediafacebook.py 30
 

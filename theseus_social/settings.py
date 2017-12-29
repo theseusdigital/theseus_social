@@ -25,7 +25,7 @@ SECRET_KEY = 'i$b8vb*et^w&&qspe48idf))7al)p(kb7d6)74elda#rcm*9^7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['104.236.126.88','nishusocial.com']
+ALLOWED_HOSTS = ['theseus.digital']
 
 
 # Application definition
@@ -79,8 +79,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'NAME': 'theseus_social',
-        'USER': 'theseus',
-        'PASSWORD': 'theseus123',
+        'USER': 'tracker',
+        'PASSWORD': 'tracker123',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '',
     }

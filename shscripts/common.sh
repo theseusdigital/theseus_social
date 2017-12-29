@@ -1,6 +1,6 @@
 date
-cd /home/nishant
-source Env/theseus_social/bin/activate
+cd /home/theseus
+source /home/theseus/theseus_social_env/bin/activate
 cd theseus_social
-export PYTHONPATH=/home/nishant/theseus_social:$PYTHONPATH
-export PY_EXEC='/home/nishant/Env/theseus_social/local/bin/python2.7'
+export PYTHONPATH=/home/theseus/theseus_social:$PYTHONPATH
+export PY_EXEC='/home/theseus/theseus_social_env/bin/python2.7'

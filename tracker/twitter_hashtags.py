@@ -29,7 +29,7 @@ last_week_date = todaydate - timedelta(days = 7)
 last_day_date = todaydate - timedelta(days = 1)
 format = "%Y-%m-%d %H:%M:%S"
 
-dbs = MySQLdb.connect(host='localhost',user='theseus',passwd='theseus123',db='theseus_social',charset='utf8')
+dbs = MySQLdb.connect(host='localhost',user='tracker',passwd='tracker123',db='theseus_social',charset='utf8')
 
 class TwitterHashtags:
 	def __init__(self):
