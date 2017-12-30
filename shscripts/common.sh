@@ -1,4 +1,4 @@
-date
+TZ=Asia/Kolkata date
 cd /home/theseus
 source /home/theseus/theseus_social_env/bin/activate
 cd theseus_social
