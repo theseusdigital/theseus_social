@@ -20,13 +20,13 @@
 26 13 * * * /home/theseus/theseus_social/shscripts/scrapestatus.sh > /home/theseus/theseus_social/logs/LOG_SCRAPESTATUS
 
 # Cron to get 30 day old FB Posts for handles
-30 15 * * * /home/theseus/theseus_social/shscripts/facebookhandlepostsold.sh > /home/theseus/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
+30 14 * * * /home/theseus/theseus_social/shscripts/facebookhandlepostsold.sh > /home/theseus/theseus_social/logs/LOG_FACEBOOKHANDLEPOSTSOLD
 
 # Cron to get 30 day old Youtube Videos for handles
-40 15 * * * /home/theseus/theseus_social/shscripts/youtubechannelvideosold.sh > /home/theseus/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
+40 14 * * * /home/theseus/theseus_social/shscripts/youtubechannelvideosold.sh > /home/theseus/theseus_social/logs/LOG_YOUTUBECHANNELVIDEOSOLD
 
 # Cron to get 30 day old Tweets for handles
-#50 15 * * * /home/theseus/theseus_social/shscripts/handletweetsold.sh > /home/theseus/theseus_social/logs/LOG_HANDLETWEETSOLD
+#50 14 * * * /home/theseus/theseus_social/shscripts/handletweetsold.sh > /home/theseus/theseus_social/logs/LOG_HANDLETWEETSOLD
 
 # Social Media Scripts for Last 30 days
 28 13 * * * /home/theseus/theseus_social/shscripts/socialmediaold.sh > /home/theseus/theseus_social/logs/LOG_SOCIALMEDIAOLD
