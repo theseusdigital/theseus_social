@@ -64,12 +64,12 @@ class ScrapeStatus():
 
     def send_email(self):
         message = self.scrape_html
-        receiver = 'nishantshetty92@gmail.com'
+        receivers = "nishantshetty92@gmail.com,tech@theseus.digital"
         sender = formataddr((str(Header(u'Theseus Tracker', 'utf-8')), "nishant.theseus@gmail.com"))
         # Create a text/plain message
         msg = email.mime.Multipart.MIMEMultipart()
         msg['From'] = sender
-        msg['To'] = receiver
+        msg['To'] = receivers
         msg['Subject'] = 'Scrape Status Report'
         # The main body is just another attachment
         body = email.mime.Text.MIMEText(message,'html')
@@ -81,7 +81,7 @@ class ScrapeStatus():
         server.ehlo()
         server.starttls()
         server.login(username,password)
-        server.sendmail(sender,[receiver], msg.as_string())
+        server.sendmail(sender,receivers.split(","), msg.as_string())
         server.quit()
 
         print 'Scrape Status Sent Successfully'
